@@ -332,3 +332,5 @@ taskone/media/
 !.envs/.local/
 /.idea/
 /.envs/
+!/.envs/
+!/.idea/
