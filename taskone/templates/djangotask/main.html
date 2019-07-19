@@ -1,21 +1,10 @@
-{% if form %}
-<div>
-  <p>Rater register</p>
-  <form  action="{% url 'main_view' %}" method="post" id="form">
-    {% csrf_token %}
-  ID:<br>
-  <input type="text" name="api_id" id="api_id" required><br>
-  age:<br>
-  <input type="text" name="age" id="age" required><br>
-    gender:<br>
-  <input type="text" name="gender" id="gender" required><br>
-  location:<br>
-  <input type="text" name="location" id="location" required><br>
-    <input type="hidden" name="workflow" value="{{ '1234'|random }}">
-    <input type="submit" value="Submit" id="submit">
-</form>
-</div>
-{% endif %}
 {% if rater %}
 <p>Rater done</p>
 {% endif %}
+{% if workflow %}
+<p>Workflow done</p>
+{% endif %}
+<ul>
+  <li><a href="{% url 'rater_form' %}">Rater form</a></li>
+  <li><a href="{% url 'workflow_form' %}">Workflow form</a></li>
+</ul>

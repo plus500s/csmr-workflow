@@ -1,47 +1,112 @@
-import time
-
-from django.test import LiveServerTestCase, override_settings
+from importlib import import_module
+from django.conf import settings
+from django.test import override_settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from .models import Rater
-from selenium.webdriver.remote.webdriver import WebDriver
+from django.contrib.sessions.backends.cached_db import SessionStore
+from selenium.webdriver.firefox.webdriver import WebDriver
+from .models import Rater, Workflow, Item, Answer
 
 
 @override_settings(ALLOWED_HOSTS=['*'])
 class RaterRegisterTest(StaticLiveServerTestCase):
+    multi_db = True
 
     @classmethod
     def setUpClass(cls):
-        cls.host = "django"
-        cls.port = 20000
-        super(RaterRegisterTest, cls).setUpClass()
+        # cls.host = "django"
+        # cls.port = 20000
+        super().setUpClass()
 
     def setUp(self):
-        self.selenium = WebDriver('http://172.20.0.2:4444/wd/hub', {'browserName': 'firefox'})
-        super(RaterRegisterTest, self).setUp()
+        self.selenium = WebDriver(executable_path='/Users/igormatcenko/Documents/taskOne/taskone/geckodriver/geckodriver')
+        from django.conf import settings
+        engine = import_module(settings.SESSION_ENGINE)
+        self.session = engine.SessionStore()
+        super().setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(RaterRegisterTest, self).tearDown()
+        super().tearDown()
 
-    def test_register(self):
+    # def test_register_with_invalid_data(self):
+    #     for x in range(1,5):
+    #         Workflow.objects.create(api_id=x, name=x, instruction=x, judgment=x, prediction=x)
+    #
+    #     selenium = self.selenium
+    #     selenium.get(f'{self.live_server_url}/taskone/rater_form')
+    #
+    #     api_id = selenium.find_element_by_id('api_id')
+    #     age = selenium.find_element_by_id('age')
+    #     gender = selenium.find_element_by_id('gender')
+    #     location = selenium.find_element_by_id('location')
+    #
+    #     submit = selenium.find_element_by_id('submit')
+    #
+    #     api_id.send_keys('jfgdg')
+    #     age.send_keys('15')
+    #     gender.send_keys('m')
+    #     location.send_keys('China')
+    #
+    #     submit.click()
+    #
+    #     self.assertTrue(selenium.find_element_by_id('error'))
+
+    # def test_register(self):
+    #     for x in range(1,5):
+    #         Workflow.objects.create(api_id=x, name=x, instruction=x, judgment=x, prediction=x)
+    #
+    #     selenium = self.selenium
+    #     selenium.get(f'{self.live_server_url}/taskone/rater_form')
+    #
+    #     api_id = selenium.find_element_by_id('api_id')
+    #     age = selenium.find_element_by_id('age')
+    #     gender = selenium.find_element_by_id('gender')
+    #     location = selenium.find_element_by_id('location')
+    #
+    #     submit = selenium.find_element_by_id('submit')
+    #
+    #     api_id.send_keys('1')
+    #     age.send_keys('15')
+    #     gender.send_keys('m')
+    #     location.send_keys('China')
+    #
+    #     submit.click()
+    #
+    #     self.assertEqual(Rater.objects.all().count(), 1)
+
+    def test_answer_with_invalid_data(self):
+        Item.objects.create(api_id=1, url='www.test.com', category='test_category')
+        workflow = None
+        for x in range(1, 5):
+            workflow = Workflow.objects.create(api_id=x, name=x, instruction=x, judgment=x, prediction=x)
+        Rater.objects.create(api_id=1, age=10, gender='m', location='Kiev', workflow=workflow)
+
+
+        # session = SessionStore()
+        # cookie = self.client.cookies['sessionid']
+        print(self.selenium.get_cookies())
+        self.selenium.get(f'{self.live_server_url}/taskone/')
+        self.selenium.add_cookie({'name': settings.SESSION_COOKIE_NAME, 'value': 'self.session.session_key', 'secure': False, 'path': '/'})
+        print(self.selenium.get_cookies())
+        self.selenium.get(f'{self.live_server_url}/taskone/workflow_form')
+        print(self.selenium.get_cookies())
+
+        session = self.session
+        session['rater_id'] = 1
+        session.save()
         selenium = self.selenium
-        selenium.get(f'{self.live_server_url}/taskone/')
-        print(selenium.page_source)
-
-        api_id = selenium.find_element_by_id('api_id')
-        age = selenium.find_element_by_id('age')
-        gender = selenium.find_element_by_id('gender')
-        location = selenium.find_element_by_id('location')
+        rater_answer_judgment = selenium.find_element_by_id('rater_answer_judgment')
+        rater_answer_predict_a = selenium.find_element_by_id('answer_a')
+        rater_answer_predict_b = selenium.find_element_by_id('answer_b')
+        rater_answer_predict_c = selenium.find_element_by_id('answer_c')
 
         submit = selenium.find_element_by_id('submit')
 
-        api_id.send_keys('1')
-        age.send_keys('15')
-        gender.send_keys('m')
-        location.send_keys('China')
+        rater_answer_judgment.click()
+        rater_answer_predict_a.send_keys('10')
+        rater_answer_predict_b.send_keys('15')
+        rater_answer_predict_c.send_keys('20')
 
         submit.click()
 
-        print(selenium.page_source)
-
-        self.assertEqual(Rater.objects.all().count(), 1)
+        self.assertEqual(Answer.objects.all().count(), 1)

@@ -26,8 +26,8 @@ class Item(models.Model):
 class ItemWorkflow(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE)
     workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
-    raters_desired = models.PositiveIntegerField(unique=True)
-    raters_actual = models.PositiveIntegerField(unique=True)
+    raters_desired = models.PositiveIntegerField()
+    raters_actual = models.PositiveIntegerField()
 
 
 class Answer(models.Model):
