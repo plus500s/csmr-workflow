@@ -17,9 +17,7 @@ def rater_form(request):
             request.session['rater_id'] = form.cleaned_data['api_id']
             request.session['item'] = 1
             form.save()
-            print(form.is_valid())
             return render(request, 'djangotask/main.html', {'rater': 'done'})
-        print(form.errors)
         return render(request, 'djangotask/rater_form.html', {'error': True})
 
     form = RaterForm()
