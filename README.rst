@@ -57,8 +57,9 @@ Running tests with py.test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
-
-  $ pytest
+    First you should setup python env with all requirements (local.txt)
+    AAlso you should have installed firefox on your system
+  $ python manage.py test
 
 Live reloading and Sass CSS compilation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,12 +76,12 @@ Deployment
 ----------
 
 The following details how to deploy this application.
-
+Just run docker-compose -f path_to_local.yml up
 
 
 Docker
 ^^^^^^
-
+Docker only for accessing django site, tests wont work in docker mode.
 See detailed `cookiecutter-django Docker documentation`_.
 
 .. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html

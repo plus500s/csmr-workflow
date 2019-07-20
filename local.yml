@@ -12,6 +12,7 @@ services:
     image: taskone_local_django
     depends_on:
       - postgres
+      - firefox
     volumes:
       - .:/app
     env_file:
@@ -19,6 +20,7 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - "8000:8000"
+      - "20000:20000"
     command: /start
 
   postgres:
@@ -31,3 +33,19 @@ services:
       - local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+    ports:
+      - 5432:5432
+  selenium-hub:
+    image: selenium/hub:3.141.59-selenium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  firefox:
+    image: selenium/node-firefox:3.141.59-selenium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444

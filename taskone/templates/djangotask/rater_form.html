@@ -1,0 +1,20 @@
+<a href="{% url 'main_view' %}">Main menu</a>
+{% if error %}
+<p id="error">Error, please try again.</p>
+{% endif %}
+<div>
+  <p>Rater register</p>
+  <form  action="{% url 'rater_form' %}" method="post" id="form">
+    {% csrf_token %}
+  ID:<br>
+  <input type="text" name="api_id" id="api_id" required><br>
+  age:<br>
+  <input type="text" name="age" id="age" required><br>
+    gender:<br>
+  <input type="text" name="gender" id="gender" required><br>
+  location:<br>
+  <input type="text" name="location" id="location" required><br>
+    <input type="hidden" name="workflow" value="{{ '1234'|random }}">
+    <input type="submit" value="Submit" id="submit">
+</form>
+</div>
