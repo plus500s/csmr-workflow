@@ -78,7 +78,10 @@ Deployment
 The following details how to deploy this application.
 
 NOTE! For first launch ,you should create at least 4 workflows and 1 idea
+
 Just run docker-compose -f path_to_local.yml up
+
+The test form is available at localhost:8000/taskone
 
 
 Docker
