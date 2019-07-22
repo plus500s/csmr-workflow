@@ -58,7 +58,7 @@ Running tests with py.test
 
 ::
     First you should setup python env with all requirements (local.txt)
-    AAlso you should have installed firefox on your system
+    Also you should have installed firefox on your system
   $ python manage.py test
 
 Live reloading and Sass CSS compilation
@@ -76,6 +76,8 @@ Deployment
 ----------
 
 The following details how to deploy this application.
+
+NOTE! For first launch ,you should create at least 4 workflows and 1 idea
 Just run docker-compose -f path_to_local.yml up
 
 
