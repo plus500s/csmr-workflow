@@ -77,16 +77,15 @@ Deployment
 
 The following details how to deploy this application.
 
-NOTE! For first launch ,you should create at least 4 workflows and 1 idea
+Just run "docker-compose -f local.yml up --build django"
 
-Just run docker-compose -f path_to_local.yml up
-
-The test form is available at localhost:8000/taskone
+The site is available at localhost:8000
 
 
 Docker
 ^^^^^^
 Docker only for accessing django site, tests wont work in docker mode.
+
 See detailed `cookiecutter-django Docker documentation`_.
 
 .. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html

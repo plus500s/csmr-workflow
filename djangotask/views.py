@@ -12,7 +12,8 @@ def main_view(request):
 
 def rater_form(request):
     if request.method == 'POST':
-        form = RaterForm(request.POST)
+        rater = Rater(workflow=Workflow.objects.order_by('?').first())
+        form = RaterForm(request.POST, instance=rater)
         if form.is_valid():
             request.session['rater_id'] = form.cleaned_data['api_id']
             request.session['item'] = 1

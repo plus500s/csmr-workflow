@@ -12,7 +12,6 @@ services:
     image: taskone_local_django
     depends_on:
       - postgres
-      - firefox
     volumes:
       - .:/app
     env_file:
