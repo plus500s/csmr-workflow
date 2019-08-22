@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('age', models.CharField(max_length=255)),
                 ('gender', models.CharField(max_length=255)),
                 ('location', models.CharField(max_length=255)),
-                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Workflow')),
+                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Workflow')),
             ],
         ),
         migrations.CreateModel(
@@ -49,8 +49,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('raters_desired', models.PositiveIntegerField()),
                 ('raters_actual', models.PositiveIntegerField()),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Item')),
-                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Workflow')),
+                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Item')),
+                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Workflow')),
             ],
         ),
         migrations.CreateModel(
@@ -63,9 +63,9 @@ class Migration(migrations.Migration):
                 ('rater_answer_predict_a', models.TextField()),
                 ('rater_answer_predict_b', models.TextField()),
                 ('rater_answer_predict_c', models.TextField()),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Item')),
-                ('rater', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Rater')),
-                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='djangotask.Workflow')),
+                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Item')),
+                ('rater', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Rater')),
+                ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='workflow.Workflow')),
             ],
         ),
     ]

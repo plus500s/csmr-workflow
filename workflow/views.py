@@ -7,7 +7,7 @@ from .models import Rater, Answer, Item, Workflow, ItemWorkflow
 
 
 def main_view(request):
-    return render(request, 'djangotask/main.html')
+    return render(request, 'workflow/main.html')
 
 
 def rater_form(request):
@@ -18,11 +18,11 @@ def rater_form(request):
             request.session['rater_id'] = form.cleaned_data['api_id']
             request.session['item'] = 1
             form.save()
-            return render(request, 'djangotask/main.html', {'rater': 'done'})
-        return render(request, 'djangotask/rater_form.html', {'error': True})
+            return render(request, 'workflow/main.html', {'rater': 'done'})
+        return render(request, 'workflow/rater_form.html', {'error': True})
 
     form = RaterForm()
-    return render(request, 'djangotask/rater_form.html', {'form': form})
+    return render(request, 'workflow/rater_form.html', {'form': form})
 
 
 def workflow_form(request):
@@ -56,22 +56,22 @@ def workflow_form(request):
                 instance.save()
 
         except:
-            return render(request, 'djangotask/workflow_form.html', {'error': True})
+            return render(request, 'workflow/workflow_form.html', {'error': True})
 
     rater_id = request.session.get('rater_id', False)
     if not rater_id:
-        return render(request, 'djangotask/workflow_form.html', {'error': True})
+        return render(request, 'workflow/workflow_form.html', {'error': True})
 
     form = RaterForm()
 
     workflow = Rater.objects.get(api_id=rater_id).workflow
 
     try:
-        return render(request, 'djangotask/workflow_form.html', {
+        return render(request, 'workflow/workflow_form.html', {
             'form': form,
             'item': Item.objects.get(id=request.session['item']),
             'workflow': workflow,
             'rater_id': Rater.objects.get(api_id=rater_id).id,
         })
     except ObjectDoesNotExist:
-        return render(request, 'djangotask/main.html', {'workflow': 'done'})
+        return render(request, 'workflow/main.html', {'workflow': 'done'})

@@ -8,6 +8,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.idea/
 .Python
 build/
 develop-eggs/
@@ -321,7 +322,7 @@ tags
 
 ### Project template
 
-taskone/media/
+core/media/
 
 .pytest_cache/
 
