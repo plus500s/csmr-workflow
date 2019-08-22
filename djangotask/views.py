@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.db.models import F
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from .form import RaterForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
@@ -27,7 +27,7 @@ def rater_form(request):
 
 def workflow_form(request):
     if request.method == 'POST':
-        rater_id = Rater.objects.get(api_id=request.session['rater_id'])
+        rater_id = get_object_or_404(Rater, api_id=request.session.get('rater_id'))
         item = Item.objects.get(id=request.POST.get('item'))
         answer_start = request.POST.get('answer_start')
         workflow = Workflow.objects.get(id=request.POST.get('workflow'))
