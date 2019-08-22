@@ -1,27 +1,18 @@
-<a href="{% url 'main_view' %}">Main menu</a>
-{% if error %}
-<p id="error">Error, please try again.</p>
-{% endif %}
-<div>
-  <p>Workflow form</p>
-  <form  action="{% url 'workflow_form' %}" method="post" id="form">
-    {% csrf_token %}
-    <p>Instruction: <span>{{workflow.instruction}}</span></p>
-    <p>Item: {{item.id}} <span><a href="{{item.url}}">{{item.url}}</a></span></p>
-    <p>Judgement question: <span>{{workflow.judgment}}</span></p>
-    <input type="radio" name="rater_answer_judgment" id="rater_answer_judgment" value="False" required>False<br>
-  <input type="radio" name="rater_answer_judgment" value="True" required>True<br>
-  <input type="radio" name="rater_answer_judgment" value="Im not sure" required>Im not sure<br>
-    <p>Prediction question: <span>{{workflow.prediction}}</span></p>
-  <ul>
-  <li>A<input type="text" id="answer_a" name="rater_answer_predict_a" required></li>
-  <li>B<input type="text" id="answer_b" name="rater_answer_predict_b" required></li>
-  <li>C<input type="text" id="answer_c" name="rater_answer_predict_c" required></li>
-</ul>
+{% extends 'workflow/base.html' %}
+{% block extra_loads %}
+{% load crispy_forms_tags %}
+{% endblock %}
+{% block form_name %}
+Workflow form
+{% endblock %}
+{% block content %}
+<form  action="{% url 'workflow_form' %}" method="post" id="form">
+  {% csrf_token %}
+    {{ form|crispy }}
     <input type="hidden" name="answer_start" value="{% now "Y-m-d H:i:s.u" %}">
     <input type="hidden" name="workflow" value="{{workflow.id}}">
     <input type="hidden" name="rated" value="{{rater_id}}">
     <input type="hidden" name="item" value="{{item.id}}">
-    <input type="submit" value="Submit" id="submit">
+  <input type="submit" value="Submit" id="submit" class="btn btn-success">
 </form>
-</div>
+{% endblock %}

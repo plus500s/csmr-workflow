@@ -18,6 +18,8 @@ services:
     ports:
       - 5432:5432
   tests:
+    env_file:
+      environment/local
     build:
       dockerfile: Dockerfile-test
       context: .
