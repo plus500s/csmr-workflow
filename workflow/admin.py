@@ -7,4 +7,3 @@ admin.site.register(Rater)
 admin.site.register(Answer)
 admin.site.register(ItemWorkflow)
 admin.site.register(Workflow)
-
