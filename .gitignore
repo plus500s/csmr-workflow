@@ -333,8 +333,6 @@ core/media/
 !.envs/.local/
 /.idea/
 /.envs/
-!/.envs/
-!/.idea/
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/csmr-workflow.iml
 /.idea/misc.xml

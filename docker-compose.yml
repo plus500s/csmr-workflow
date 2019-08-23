@@ -15,3 +15,12 @@ services:
       - db
   db:
     image: postgres
+    ports:
+      - 5432:5432
+  tests:
+    build:
+      dockerfile: Dockerfile-test
+      context: .
+    command: bash -c "prospector"
+    volumes:
+      - .:/app
