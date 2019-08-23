@@ -1,7 +1,7 @@
-FROM python:3.7
+FROM python:3.7.4
 ENV PYTHONUNBUFFERED 1
-RUN mkdir /code
-WORKDIR /code
-COPY requirements/base.txt /code/
+RUN mkdir /app
+WORKDIR /app
+COPY requirements/base.txt /app/
 RUN pip install -r base.txt
-COPY . /code/
+COPY . /app/

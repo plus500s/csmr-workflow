@@ -1,1 +1,2 @@
 -r ./base.txt
+prospector==1.1.7
