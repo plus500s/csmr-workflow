@@ -22,3 +22,5 @@ services:
       dockerfile: Dockerfile-test
       context: .
     command: bash -c "prospector"
+    volumes:
+      - .:/app
