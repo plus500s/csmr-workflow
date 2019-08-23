@@ -335,3 +335,8 @@ core/media/
 /.envs/
 !/.envs/
 !/.idea/
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/csmr-workflow.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
