@@ -5,16 +5,13 @@ stop:
 	docker-compose stop web
 	docker-compose stop db
 
+build_web:
+	docker-compose build web
+
 run_tests:
 	docker-compose up -d firefox
-
-	@if [ ! -z $(docker images -q web_image:latest) ] ; then \
-		docker-compose build web; \
-	fi
-
 	docker-compose up --build tests
 	docker-compose stop firefox
 	docker-compose stop selenium-hub
 
-ci_tests:
-	prospector
+ci_tests: build_web run_tests
