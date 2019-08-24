@@ -4,6 +4,6 @@ services:
 before_script:
 - sudo /etc/init.d/postgresql stop
 script:
-  - make run_tests
+  - make  ci_tests
 notifications:
   slack: csmr-group:ndbLQPC0yIQvGLSo3dLEAzPj
