@@ -26,6 +26,8 @@ services:
       - .:/app
     env_file:
       environment/local
+    depends_on:
+       - db
   selenium-hub:
     image: selenium/hub:3.141.59-selenium
     container_name: selenium-hub
