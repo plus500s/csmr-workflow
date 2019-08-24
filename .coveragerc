@@ -1,0 +1,10 @@
+[run]
+source =
+    ./
+omit =
+	./tests/*
+	./core/*
+	./workflow/migrations/*
+	./workflow/__init__.py
+	./workflow/apps.py
+	./manage.py

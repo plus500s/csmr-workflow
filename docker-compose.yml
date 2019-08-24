@@ -21,7 +21,7 @@ services:
     build:
       dockerfile: Dockerfile-test
       context: .
-    command: bash -c "prospector || exit 0 && python manage.py test --noinput -v 1"
+    command: bash -c "prospector || exit 0 && coverage run --source='.' manage.py test --noinput -v 1 && coverage report"
     volumes:
       - .:/app
     env_file:
