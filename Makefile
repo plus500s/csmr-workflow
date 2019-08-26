@@ -3,9 +3,15 @@ start:
 
 stop:
 	docker-compose stop web
+	docker-compose stop db
 
-tests:
-	docker-compose up tests
+build_web:
+	docker-compose build web
 
-ci_tests:
-	prospector
+run_tests:
+	docker-compose up -d firefox
+	docker-compose up --build tests
+	docker-compose stop firefox
+	docker-compose stop selenium-hub
+
+ci_tests: build_web run_tests

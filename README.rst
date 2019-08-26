@@ -23,4 +23,4 @@ Using Makefile
 
 *  to run tests run::
 
-    $ make tests
+    $ make run_tests

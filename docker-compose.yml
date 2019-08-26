@@ -21,6 +21,24 @@ services:
     build:
       dockerfile: Dockerfile-test
       context: .
-    command: bash -c "prospector"
+    command: bash -c "prospector || exit 0 && coverage run --source='.' manage.py test --noinput -v 1 && coverage report"
     volumes:
       - .:/app
+    env_file:
+      environment/local
+    depends_on:
+       - db
+  selenium-hub:
+    image: selenium/hub:3.141.59-selenium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  firefox:
+    image: selenium/node-firefox:3.141.59-selenium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
