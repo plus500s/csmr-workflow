@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.main_view, name='main_view'),
     path('rater_form', views.rater_form, name='rater_form'),
     path('workflow_form', views.workflow_form, name='workflow_form'),
+    path('judgment_form', views.judgment_form, name='judgment_form'),
 ]
