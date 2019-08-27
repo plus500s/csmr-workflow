@@ -25,7 +25,7 @@ class WorkflowForm(Form):
         choices=EVIDENCE_CHOICES,
         widget=forms.RadioSelect)
     evidence_url = forms.URLField(
-        label='If Yes, please provide the URL you used to make your judjement',
+        label='If Yes, please provide the URL you used to make your judgement',
         required=False)
     judgement_question = forms.Field(
         label='<strong>Judgement question:</strong>',
@@ -54,3 +54,20 @@ class WorkflowForm(Form):
         label='C',
         required=False,
         widget=forms.NumberInput(attrs={'style': 'width:100px'}))
+
+
+class JudgementForm(WorkflowForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.evidence_url_choices = kwargs.get('initial').get('evidence_url_choices')
+        except AttributeError:
+            self.evidence_url_choices = []
+        self.fields['evidence_url'] = forms.ChoiceField(
+            label='Following are a list of links that are likely to contain corroborating '
+                  'evidence. Select the link that you found most useful to make your judgement.',
+            choices=self.evidence_url_choices,
+            widget=forms.RadioSelect,
+            required=True)
+        self.fields.pop('rater_answer_evidence')
+        self.is_valid()

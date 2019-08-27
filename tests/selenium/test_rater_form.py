@@ -32,7 +32,7 @@ class RaterRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answers_count, 0)
 
     def test_register(self):
-        for x in range(1,5):
+        for x in range(1, 5):
             Workflow.objects.create(
                 api_id=x,
                 name=x,
