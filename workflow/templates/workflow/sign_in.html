@@ -3,16 +3,17 @@
 {% load crispy_forms_tags %}
 {% endblock %}
 {% block form_name %}
-Rater form
+Sign in
 {% endblock %}
 {% block content %}
 
-<form  action="{% url 'rater_form' %}" method="post" id="form">
+<form  action="{% url 'sign_in' %}" method="post" id="form">
   {% csrf_token %}
      <table>
          {{ form|crispy }}
      </table>
-  <input type="submit" value="Submit" id="submit">
+  <input type="submit" value="Submit" id="submit" class="btn btn-success">
 </form>
+    <h3>You don't have an account? Please, <a href="{% url 'sign_up' %}">sign up</a>.</h3>
 
 {% endblock %}

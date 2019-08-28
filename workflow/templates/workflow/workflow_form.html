@@ -6,7 +6,7 @@
 Workflow form
 {% endblock %}
 {% block content %}
-<form  action="{% url 'workflow_form' %}" method="post" id="form">
+<form  action="{% url workflow_url %}" method="post" id="form">
   {% csrf_token %}
     {{ form|crispy }}
     <input type="hidden" name="answer_start" value="{% now "Y-m-d H:i:s.u" %}">
