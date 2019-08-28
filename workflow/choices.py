@@ -2,7 +2,7 @@ EVIDENCE_CHOICES = (
     ('True', 'Yes'),
     ('False', 'No')
 )
-JUDGEMENT_CHOICES = (
+JUDGMENT_CHOICES = (
     ('False',
      'A. False or sufficiently misleading that search and social platforms should demote it'),
     ('True',

@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-from .form import RaterForm, WorkflowForm, JudgementForm
+from .form import RaterForm, WorkflowForm, JudgmentForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
 
 NONE_OF_THE_ABOVE_TUPLE = ('None of the above', 'None of the above')
@@ -32,7 +32,7 @@ def rater_form(request):
     return render(request, 'workflow/rater_form.html', {'form': form})
 
 
-def workflow_form(request):
+def workflow_form(request):  # noqa: too-many-locals
     def get_form(messages=None, error=False):
         rater_id = request.session.get('rater_id', False)
         if not rater_id:
@@ -43,7 +43,7 @@ def workflow_form(request):
             form = WorkflowForm(initial={
                 'item': item.url,
                 'instruction': workflow.instruction,
-                'judgement_question': workflow.judgment,
+                'judgment_question': workflow.judgment,
                 'prediction_question': workflow.prediction,
             })
             return render(request, 'workflow/workflow_form.html', {
@@ -69,6 +69,22 @@ def workflow_form(request):
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
+            # check, that prediction answers are 100 in sum.
+            try:
+                prediction_sum = sum([int(rater_answer_predict_a),
+                                      int(rater_answer_predict_b),
+                                      int(rater_answer_predict_c)])
+                if prediction_sum != 100:
+                    return get_form(error=True,
+                                    messages=[
+                                        'Please, enter valid percentage for Prediction question.',
+                                        'Sum of A, B and C answers should be 100.'
+                                        'Please, try again.'])
+            except TypeError:
+                return get_form(error=True,
+                                messages=[
+                                    'Please, enter valid percentage for Prediction question.',
+                                    'Please, try again.'])
             evidence_url = None
             if request.POST.get('evidence_url') and request.POST.get(
                     'rater_answer_evidence'):
@@ -98,8 +114,10 @@ def workflow_form(request):
                     instance.raters_actual = F('raters_actual') + 1
                     instance.save()
             except IntegrityError:
-                return render(request, 'workflow/workflow_form.html',
-                              {'error': True, 'form': form})
+                return get_form(error=True,
+                                messages=[
+                                    'Something went wrong.',
+                                    'Please, try again.'])
 
         else:
             return get_form(error=True,
@@ -109,7 +127,7 @@ def workflow_form(request):
     return get_form()
 
 
-def judgement_form(request):  # noqa: too-many-locals
+def judgment_form(request):  # noqa: too-many-locals
     try:
         item = Item.objects.get(id=request.session['judge_item'])
         top_five_urls = sorted([answer.get('evidence_url') for answer in
@@ -126,20 +144,20 @@ def judgement_form(request):  # noqa: too-many-locals
     def get_form(messages=None, error=False):
         rater_id = request.session.get('rater_id', False)
         if not rater_id:
-            return render(request, 'workflow/judgement_form.html',
+            return render(request, 'workflow/judgment_form.html',
                           {'error': True})
         workflow = Rater.objects.get(api_id=rater_id).workflow
         try:
             item = Item.objects.get(id=request.session['judge_item'])
-            form = JudgementForm(
+            form = JudgmentForm(
                 initial={
                     'evidence_url_choices': evidence_url_choices,
                     'item': item.url,
                     'instruction': workflow.instruction,
-                    'judgement_question': workflow.judgment,
+                    'judgment_question': workflow.judgment,
                     'prediction_question': workflow.prediction,
                 })
-            return render(request, 'workflow/judgement_form.html', {
+            return render(request, 'workflow/judgment_form.html', {
                 'form': form,
                 'item': item,
                 'workflow': workflow,
@@ -151,7 +169,7 @@ def judgement_form(request):  # noqa: too-many-locals
             return render(request, 'workflow/main.html', {'workflow': 'done'})
 
     if request.method == 'POST':
-        form = JudgementForm(request.POST, initial={
+        form = JudgmentForm(request.POST, initial={
             'evidence_url_choices': evidence_url_choices})
         if form.is_valid():
             rater_id = get_object_or_404(Rater,
@@ -165,6 +183,22 @@ def judgement_form(request):  # noqa: too-many-locals
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
+            # check, that prediction answers are 100 in sum.
+            try:
+                prediction_sum = sum([int(rater_answer_predict_a),
+                                      int(rater_answer_predict_b),
+                                      int(rater_answer_predict_c)])
+                if prediction_sum != 100:
+                    return get_form(error=True,
+                                    messages=[
+                                        'Please, enter valid percentage for Prediction question.',
+                                        'Sum of A, B and C answers should be 100.'
+                                        'Please, try again.'])
+            except TypeError:
+                return get_form(error=True,
+                                messages=[
+                                    'Please, enter valid percentage for Prediction question.',
+                                    'Please, try again.'])
             evidence_url = None
             if request.POST.get('evidence_url') and \
                     request.POST.get(
@@ -194,8 +228,11 @@ def judgement_form(request):  # noqa: too-many-locals
                     instance.raters_actual = F('raters_actual') + 1
                     instance.save()
             except IntegrityError:
-                return render(request, 'workflow/judgement_form.html',
-                              {'error': True})
+                return get_form(error=True,
+                                messages=[
+                                    'Something went wrong.',
+                                    'Please, try again.'])
+
         else:
             return get_form(error=True,
                             messages=[
