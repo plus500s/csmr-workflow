@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from workflow.models import Rater, Workflow, Answer
+from workflow.models import Rater, Workflow
 from tests.selenium.base import SeleniumBaseRemoteTest
 
 
@@ -68,7 +68,7 @@ class SignUpTest(SeleniumBaseRemoteTest):
 class SignInTest(SeleniumBaseRemoteTest):
     SUCCESS_ALERTS = ['Rater authorized']
     UN_SUCCESS_ALERTS = ['User with current api_id does not exist',
-                        'Please, try again or sign up as a new user.']
+                         'Please, try again or sign up as a new user.']
 
     def test_sign_in_with_invalid_data(self):
         for x in range(1, 5):
@@ -78,7 +78,7 @@ class SignInTest(SeleniumBaseRemoteTest):
                 instruction=x,
                 judgment=x,
                 prediction=x)
-        rater = Rater.objects.create(
+        Rater.objects.create(
             email='testsignin@test.com',
             api_id='test_sign_in',
             age=10,
@@ -140,7 +140,7 @@ class LogoutTest(SeleniumBaseRemoteTest):
                 instruction=x,
                 judgment=x,
                 prediction=x)
-        rater = Rater.objects.create(
+        Rater.objects.create(
             email='testslogout@test.com',
             api_id='test_logout',
             age=10,
