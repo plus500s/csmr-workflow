@@ -33,25 +33,13 @@ class SignInForm(Form):
     )
 
 
-class WorkflowForm(Form):
+class BaseWorkflowForm(Form):
     instruction = forms.Field(
         disabled=True,
         widget=forms.Textarea(attrs={'rows': 4}),
         required=False)
     item = forms.URLField(
         disabled=True,
-        required=False)
-    corroborating_question = forms.Field(
-        label='<strong>Corroborating evidence:</strong>',
-        disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
-        required=False)
-    rater_answer_evidence = forms.ChoiceField(
-        label='',
-        choices=EVIDENCE_CHOICES,
-        widget=forms.RadioSelect)
-    evidence_url = forms.URLField(
-        label='If Yes, please provide the URL you used to make your judgment',
         required=False)
     judgment_question = forms.Field(
         label='<strong>Judgment question:</strong>',
@@ -84,9 +72,33 @@ class WorkflowForm(Form):
         widget=forms.NumberInput(attrs={'style': 'width:100px'}))
 
 
-class JudgmentForm(WorkflowForm):
+class WithoutEvidenceWorkflowForm(BaseWorkflowForm):
+    pass
+
+
+class EvidenceInputWorkflowForm(BaseWorkflowForm):
+    corroborating_question = forms.Field(
+        label='<strong>Corroborating evidence:</strong>',
+        disabled=True,
+        widget=forms.Textarea(attrs={'rows': 2}),
+        required=False)
+    rater_answer_evidence = forms.ChoiceField(
+        label='',
+        choices=EVIDENCE_CHOICES,
+        widget=forms.RadioSelect)
+    evidence_url = forms.URLField(
+        label='If Yes, please provide the URL you used to make your judgment',
+        required=False)
+
+    field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',
+                   'judgment_question', 'rater_answer_judgment', 'prediction_question', 'rater_answer_predict_a',
+                   'rater_answer_predict_b', 'rater_answer_predict_c']
+
+
+class JudgmentForm(BaseWorkflowForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         try:
             self.evidence_url_choices = kwargs.get('initial').get('evidence_url_choices')
         except AttributeError:
@@ -95,4 +107,12 @@ class JudgmentForm(WorkflowForm):
             label='',
             choices=self.evidence_url_choices,
             widget=forms.RadioSelect)
-        self.fields.pop('rater_answer_evidence')
+        self.fields['corroborating_question'] = forms.Field(
+            label='<strong>Corroborating evidence:</strong>',
+            disabled=True,
+            widget=forms.Textarea(attrs={'rows': 2}),
+            required=False)
+        self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
+                           'judgment_question', 'rater_answer_judgment', 'prediction_question',
+                           'rater_answer_predict_a',
+                           'rater_answer_predict_b', 'rater_answer_predict_c'])

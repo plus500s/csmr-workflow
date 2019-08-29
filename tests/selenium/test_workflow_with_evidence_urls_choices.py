@@ -4,21 +4,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from selenium.common.exceptions import NoSuchElementException
 
 from workflow.models import Rater, Workflow, Item, Answer
+from workflow.choices import WORKFLOW_TYPE_CHOICES
+from workflow.alerts import NOT_ALL_REQUIRED_FIELDS_ALERTS, WORKFLOW_DONE_ALERTS, PREDICTION_QUESTIONS_ALERTS, \
+    INVALID_USER_ALERTS, NOT_SIGNED_IN_USER_WORKFLOW_ALERTS
 from tests.selenium.base import SeleniumBaseRemoteTest
 
 WORKFLOW_NAME = 'workflow2'
-
-NOT_ALL_REQUIRED_FIELDS_ALERTS = ['Not all required fields have been entered.',
-                                  'Please, try again.']
-WORKFLOW_DONE_ALERTS = ['Workflow done']
-PREDICTION_QUESTIONS_ALERTS = ['Please, enter valid percentage for Prediction question.',
-                               'Sum of A, B and C answers should be 100.Please, try again.']
+WORKFLOW_TYPE = WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW
 WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success"]'
 WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
-INVALID_WORKFLOW_ALERTS = ['Got no Workflow for this User']
-INVALID_USER_ALERTS = ['Invalid User, please, try again']
-NOT_SIGNED_IN_USER_ALERTS = ['You are not signed in our system!',
-                             'Please, sign in to have an access to workflow page!']
 SIGN_IN_TEXT = ['Sign in']
 SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 
@@ -34,7 +28,8 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test_judgment1@test.com',
             api_id='test_judgment1',
@@ -109,7 +104,8 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test5@test.com',
             api_id='test_judgment2',
@@ -186,7 +182,8 @@ class JudgmentWithAlreadyDoneWorkflowTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test9@test.com',
             api_id='test_judgment3',
@@ -245,7 +242,8 @@ class JudgmentWithoutEvidenceTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test5@test.com',
             api_id='test_judgment4',
@@ -313,7 +311,8 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test6@test.com',
             api_id='test_judgment5',
@@ -382,7 +381,8 @@ class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test7@test.com',
             api_id='test_judgment7',
@@ -448,7 +448,8 @@ class JudgmentWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test8@test.com',
             api_id='test_judgment8',
@@ -517,7 +518,8 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test9@test.com',
             api_id='test_judgment9',
@@ -588,7 +590,8 @@ class JudgmentWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test10@test.com',
             api_id='test_judgment11',
@@ -655,7 +658,8 @@ class JudgmentWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
                 name=WORKFLOW_NAME,
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
             email='test10@test.com',
             api_id='test_judgment11',
@@ -691,7 +695,7 @@ class JudgmentWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
         alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
-        self.assertEqual(alerts, NOT_SIGNED_IN_USER_ALERTS)
+        self.assertEqual(alerts, NOT_SIGNED_IN_USER_WORKFLOW_ALERTS)
         sign_in_text = [sign_in.text for sign_in in selenium.find_elements_by_xpath(SIGN_IN_XPATH)]
         self.assertEqual(sign_in_text, SIGN_IN_TEXT)
         with self.assertRaises(NoSuchElementException):
@@ -704,7 +708,6 @@ class JudgmentWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
             selenium.find_element_by_id('id_rater_answer_predict_b')
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_rater_answer_predict_c')
-
         with self.assertRaises(ObjectDoesNotExist):
             Answer.objects.get(rater=rater, item=item, workflow=workflow)
         self.assertEqual(Answer.objects.all().count(), 1)

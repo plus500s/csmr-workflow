@@ -1,5 +1,7 @@
 from django.db import models
 
+from .choices import WORKFLOW_TYPE_CHOICES
+
 
 class Workflow(models.Model):
     api_id = models.PositiveIntegerField(unique=True)
@@ -7,7 +9,9 @@ class Workflow(models.Model):
     instruction = models.TextField()
     judgment = models.TextField()
     prediction = models.TextField()
-    corroborating_question = models.TextField(default='Were you able to find any corroborating evidence?')
+    corroborating_question = models.TextField(null=True, blank=True)
+    type = models.CharField(max_length=255, choices=WORKFLOW_TYPE_CHOICES,
+                            default=WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW)
 
     def __str__(self):
         return str(self.name)
