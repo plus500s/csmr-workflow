@@ -14,4 +14,7 @@ run_tests:
 	docker-compose stop firefox
 	docker-compose stop selenium-hub
 
-ci_tests: build_web run_tests
+ci_tests: build_web
+	docker-compose up -d db
+	docker-compose up -d firefox
+	docker-compose up --build  --exit-code-from tests
