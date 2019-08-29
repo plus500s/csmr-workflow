@@ -17,7 +17,8 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
-            api_id=1,
+            email='test1@test.com',
+            api_id='1',
             age=10,
             gender='m',
             location='Kiev',
@@ -29,10 +30,8 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 1
+        session['rater_id'] = '1'
         session['item'] = 1
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -64,7 +63,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_a, '20')
         self.assertEqual(answer.rater_answer_predict_b, '30')
         self.assertEqual(answer.rater_answer_predict_c, '50')
-        self.assertEqual(answer.rater.api_id, 1)
+        self.assertEqual(answer.rater.api_id, '1')
         self.assertEqual(answer.item.id, 1)
         self.assertEqual(answer.rater_answer_judgment, 'False')
         self.assertEqual(answer.evidence_url, 'https://test.com')
@@ -83,7 +82,8 @@ class WorkflowWithoutEvidenceTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         Rater.objects.create(
-            api_id=2,
+            email='test2@test.com',
+            api_id='2',
             age=10,
             gender='m',
             location='Kiev',
@@ -95,10 +95,8 @@ class WorkflowWithoutEvidenceTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 2
+        session['rater_id'] = '2'
         session['item'] = 2
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -139,7 +137,8 @@ class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         Rater.objects.create(
-            api_id=2,
+            email='test2@test.com',
+            api_id='2',
             age=10,
             gender='m',
             location='Kiev',
@@ -151,10 +150,8 @@ class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 2
+        session['rater_id'] = '2'
         session['item'] = 2
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -195,7 +192,8 @@ class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         Rater.objects.create(
-            api_id=2,
+            email='test@test.com',
+            api_id='2',
             age=10,
             gender='m',
             location='Kiev',
@@ -207,10 +205,8 @@ class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 2
+        session['rater_id'] = '2'
         session['item'] = 2
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -249,7 +245,8 @@ class WorkflowWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         Rater.objects.create(
-            api_id=2,
+            email='test@test.com',
+            api_id='2',
             age=10,
             gender='m',
             location='Kiev',
@@ -261,10 +258,8 @@ class WorkflowWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 2
+        session['rater_id'] = '2'
         session['item'] = 2
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -306,7 +301,8 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         Rater.objects.create(
-            api_id=2,
+            email='test@test.com',
+            api_id='2',
             age=10,
             gender='m',
             location='Kiev',
@@ -318,10 +314,8 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 2
+        session['rater_id'] = '2'
         session['item'] = 2
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -349,3 +343,43 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
 
         self.assertEqual(Answer.objects.all().count(), 0)
 
+
+class WorkflowWithoutLogin(SeleniumBaseRemoteTest):
+    UN_SUCCESS_ALERTS = ['You are not signed in our system!',
+                         'Please, sign in to have an access to workflow page!']
+
+    def test_answer(self):
+        Item.objects.create(id=2, api_id=2, url='www.test.com', category='test_category')
+        workflow = None
+        for x in range(2, 6):
+            workflow = Workflow.objects.create(
+                api_id=x,
+                name=x,
+                instruction=x,
+                judgment=x,
+                prediction=x)
+        Rater.objects.create(
+            email='test@test.com',
+            api_id='2',
+            age=10,
+            gender='m',
+            location='Kiev',
+            workflow=workflow)
+        User = get_user_model()
+        temp_user = User.objects.create(username='adminadmin')
+        temp_user.set_password('password')
+
+        selenium = self.selenium
+        selenium.get(self.live_server_url)
+
+        session = self.client.session
+        session.pop('rater_id', None)
+        session['item'] = 2
+        session.save()
+        selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
+                             'secure': False, 'path': '/'})
+        selenium.get(f'{self.live_server_url}/workflow_form')
+
+        alerts = selenium.find_elements_by_xpath('//div[@class="alert alert-success"]')
+        for alert in alerts:
+            self.assertTrue(alert.text in self.UN_SUCCESS_ALERTS)

@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
-from .form import RaterForm, WorkflowForm, JudgmentForm
+from .form import SignInForm, SignUpForm, WorkflowForm, JudgmentForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
 
 NONE_OF_THE_ABOVE_TUPLE = ('None of the above', 'None of the above')
@@ -13,26 +13,73 @@ def main_view(request):
     return render(request, 'workflow/main.html')
 
 
-def rater_form(request):
+def sign_up(request):
     if request.method == 'POST':
-        rater = Rater(workflow=Workflow.objects.order_by('?').first())
-        form = RaterForm(request.POST, instance=rater)
+        api_id = '{}{}'.format(request.POST.get('email').split('@', 1)[0], datetime.today().date())
+        rater = Rater(api_id=api_id, workflow=Workflow.objects.order_by('?').first())
+        form = SignUpForm(request.POST, instance=rater)
         if form.is_valid():
-            request.session['rater_id'] = form.cleaned_data['api_id']
-            request.session['item'] = 1
-            request.session['judge_item'] = 1
+            request.session['rater_id'] = api_id
+            request.session['item'] = 1  # TODO check it
+            request.session['judge_item'] = 1  # TODO check it
             form.save()
-            return render(request, 'workflow/main.html', {'rater': 'done'})
+            return render(request, 'workflow/main.html', {'new_rater': 'done'})
         errors = [value for value in form.errors.values()]
-        form = RaterForm()
-        return render(request, 'workflow/rater_form.html',
+        form = SignUpForm()
+        return render(request, 'workflow/sign_up.html',
                       {'error': True, 'form': form, 'messages':
                           [message for message in errors]})
-    form = RaterForm()
-    return render(request, 'workflow/rater_form.html', {'form': form})
+    form = SignUpForm()
+    return render(request, 'workflow/sign_up.html', {'form': form})
+
+
+def sign_in(request):
+    if request.method == 'POST':
+        form = SignInForm(request.POST)
+        if form.is_valid():
+            try:
+                rater = Rater.objects.get(api_id=request.POST.get('api_id'))
+                request.session['rater_id'] = rater.api_id
+                request.session['item'] = 1  # TODO check it
+                request.session['judge_item'] = 1  # TODO checkit
+            except ObjectDoesNotExist:
+                return render(request, 'workflow/sign_in.html', {
+                    'form': form,
+                    'error': True,
+                    'messages': ['User with current api_id does not exist',
+                                 'Please, try again or sign up as a new user.']})
+            return render(request, 'workflow/main.html', {'old_rater': 'done'})
+        errors = [value for value in form.errors.values()]
+        form = SignInForm()
+        return render(request, 'workflow/sign_up.html',
+                      {'error': True, 'form': form, 'messages':
+                          [message for message in errors]})
+    form = SignInForm()
+    return render(request, 'workflow/sign_in.html', {'form': form})
+
+
+def logout(request):
+    if not request.session.get('rater_id'):
+        return render(request, 'workflow/sign_in.html', {
+            'form': SignInForm(),
+            'error': True,
+            'messages': ['You are not signed in our system!']})
+    if request.method == 'POST':
+        request.session.pop('rater_id')
+        return render(request, 'workflow/main.html', {'logout': 'done'})
+
+    return render(request, 'workflow/logout.html')
 
 
 def workflow_form(request):  # noqa: too-many-locals
+    if not request.session.get('rater_id'):
+        return render(request, 'workflow/sign_in.html', {
+            'form': SignInForm(),
+            'error': True,
+            'messages': ['You are not signed in our system!',
+                         'Please, sign in to have an access to workflow page!']})
+    workflow_url = 'workflow_form'
+
     def get_form(messages=None, error=False):
         rater_id = request.session.get('rater_id', False)
         if not rater_id:
@@ -47,6 +94,7 @@ def workflow_form(request):  # noqa: too-many-locals
                 'prediction_question': workflow.prediction,
             })
             return render(request, 'workflow/workflow_form.html', {
+                'workflow_url': workflow_url,
                 'form': form,
                 'item': item,
                 'workflow': workflow,
@@ -118,7 +166,6 @@ def workflow_form(request):  # noqa: too-many-locals
                                 messages=[
                                     'Something went wrong.',
                                     'Please, try again.'])
-
         else:
             return get_form(error=True,
                             messages=[
@@ -128,6 +175,8 @@ def workflow_form(request):  # noqa: too-many-locals
 
 
 def judgment_form(request):  # noqa: too-many-locals
+    workflow_url = 'judgment_form'
+
     try:
         item = Item.objects.get(id=request.session['judge_item'])
         top_five_urls = sorted([answer.get('evidence_url') for answer in
@@ -144,7 +193,7 @@ def judgment_form(request):  # noqa: too-many-locals
     def get_form(messages=None, error=False):
         rater_id = request.session.get('rater_id', False)
         if not rater_id:
-            return render(request, 'workflow/judgment_form.html',
+            return render(request, 'workflow/workflow_form.html',
                           {'error': True})
         workflow = Rater.objects.get(api_id=rater_id).workflow
         try:
@@ -157,7 +206,8 @@ def judgment_form(request):  # noqa: too-many-locals
                     'judgment_question': workflow.judgment,
                     'prediction_question': workflow.prediction,
                 })
-            return render(request, 'workflow/judgment_form.html', {
+            return render(request, 'workflow/workflow_form.html', {
+                'workflow_url': workflow_url,
                 'form': form,
                 'item': item,
                 'workflow': workflow,
@@ -232,7 +282,6 @@ def judgment_form(request):  # noqa: too-many-locals
                                 messages=[
                                     'Something went wrong.',
                                     'Please, try again.'])
-
         else:
             return get_form(error=True,
                             messages=[

@@ -1,11 +1,23 @@
-{% if rater %}
-<p>Rater done</p>
+{% extends 'workflow/base.html' %}
+{% block messages %}
+{% if new_rater %}
+<div class="alert alert-success">
+Rater done
+</div>
+{% endif %}
+{% if old_rater %}
+<div class="alert alert-success">
+Rater authorized
+</div>
+{% endif %}
+{% if logout %}
+<div class="alert alert-success">
+Successful logout
+</div>
 {% endif %}
 {% if workflow %}
-<p>Workflow done</p>
+<div class="alert alert-success">
+Workflow done
+</div>
 {% endif %}
-<ul>
-  <li><a href="{% url 'rater_form' %}">Rater form</a></li>
-  <li><a href="{% url 'workflow_form' %}">Workflow form</a></li>
-  <li><a href="{% url 'judgment_form' %}">Judgment form</a></li>
-</ul>
+{% endblock %}

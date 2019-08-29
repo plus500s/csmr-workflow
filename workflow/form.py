@@ -4,11 +4,33 @@ from django.forms import ModelForm, Form
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
 from .models import Rater
 
+TEXT_WIDTH = 'width:300px'
 
-class RaterForm(ModelForm):
+
+class SignUpForm(ModelForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'style': TEXT_WIDTH})
+    )
+    age = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
+    gender = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
+    location = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
+
     class Meta:
         model = Rater
-        fields = ['api_id', 'age', 'gender', 'location']
+        fields = ['email', 'age', 'gender', 'location']
+
+
+class SignInForm(Form):
+    api_id = forms.CharField(
+        label='Please, enter your api_id to sign in:',
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
 
 
 class WorkflowForm(Form):
@@ -71,4 +93,3 @@ class JudgmentForm(WorkflowForm):
             choices=self.evidence_url_choices,
             widget=forms.RadioSelect)
         self.fields.pop('rater_answer_evidence')
-        self.is_valid()

@@ -20,7 +20,8 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
-            api_id=3,
+            email='test3@test.com',
+            api_id='3',
             age=10,
             gender='m',
             location='Kiev',
@@ -28,7 +29,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=3,
+            id=3,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -43,10 +44,8 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 3
+        session['rater_id'] = '3'
         session['judge_item'] = 3
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -76,7 +75,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_a, '10')
         self.assertEqual(answer.rater_answer_predict_b, '30')
         self.assertEqual(answer.rater_answer_predict_c, '60')
-        self.assertEqual(answer.rater.api_id, 3)
+        self.assertEqual(answer.rater.api_id, '3')
         self.assertEqual(answer.item.id, 3)
         self.assertEqual(answer.rater_answer_judgment, 'False')
         self.assertEqual(answer.evidence_url, 'https//test.evidence.com')
@@ -94,7 +93,8 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
-            api_id=5,
+            email='test5@test.com',
+            api_id='5',
             age=10,
             gender='m',
             location='Kiev',
@@ -102,7 +102,7 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=5,
+            id=5,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -117,10 +117,8 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
         selenium = self.selenium
         selenium.get(self.live_server_url)
 
-        self.client.login(username='admin', password='password')
-
         session = self.client.session
-        session['rater_id'] = 5
+        session['rater_id'] = '5'
         session['judge_item'] = 5
         session.save()
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
@@ -148,7 +146,7 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_a, '10')
         self.assertEqual(answer.rater_answer_predict_b, '20')
         self.assertEqual(answer.rater_answer_predict_c, '70')
-        self.assertEqual(answer.rater.api_id, 5)
+        self.assertEqual(answer.rater.api_id, '5')
         self.assertEqual(answer.item.id, 5)
         self.assertEqual(answer.rater_answer_judgment, 'False')
         self.assertEqual(answer.evidence_url, None)
@@ -166,6 +164,7 @@ class JudgmentWithoutEvidenceTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
+            email='test5@test.com',
             api_id=5,
             age=10,
             gender='m',
@@ -174,7 +173,7 @@ class JudgmentWithoutEvidenceTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=5,
+            id=5,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -188,8 +187,6 @@ class JudgmentWithoutEvidenceTest(SeleniumBaseRemoteTest):
 
         selenium = self.selenium
         selenium.get(self.live_server_url)
-
-        self.client.login(username='admin', password='password')
 
         session = self.client.session
         session['rater_id'] = 5
@@ -230,6 +227,7 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
+            email='test6@test.com',
             api_id=6,
             age=10,
             gender='m',
@@ -238,7 +236,7 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=6,
+            id=6,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -252,8 +250,6 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
 
         selenium = self.selenium
         selenium.get(self.live_server_url)
-
-        self.client.login(username='admin', password='password')
 
         session = self.client.session
         session['rater_id'] = 6
@@ -295,6 +291,7 @@ class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
+            email='test7@test.com',
             api_id=7,
             age=10,
             gender='m',
@@ -303,7 +300,7 @@ class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=7,
+            id=7,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -317,8 +314,6 @@ class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
 
         selenium = self.selenium
         selenium.get(self.live_server_url)
-
-        self.client.login(username='admin', password='password')
 
         session = self.client.session
         session['rater_id'] = 7
@@ -358,6 +353,7 @@ class JudgmentWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
+            email='test8@test.com',
             api_id=8,
             age=10,
             gender='m',
@@ -366,7 +362,7 @@ class JudgmentWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=8,
+            id=8,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -380,8 +376,6 @@ class JudgmentWithInvalidTypePredictionTest(SeleniumBaseRemoteTest):
 
         selenium = self.selenium
         selenium.get(self.live_server_url)
-
-        self.client.login(username='admin', password='password')
 
         session = self.client.session
         session['rater_id'] = 8
@@ -424,6 +418,7 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
                 judgment=x,
                 prediction=x)
         rater = Rater.objects.create(
+            email='test9@test.com',
             api_id=9,
             age=10,
             gender='m',
@@ -432,7 +427,7 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
         answer_start = datetime.now()
         answer_end = datetime.now()
         answer = Answer.objects.create(
-            pk=9,
+            id=9,
             rater=rater,
             item=item,
             workflow=workflow,
@@ -446,8 +441,6 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
 
         selenium = self.selenium
         selenium.get(self.live_server_url)
-
-        self.client.login(username='admin', password='password')
 
         session = self.client.session
         session['rater_id'] = 9

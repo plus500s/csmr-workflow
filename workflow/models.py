@@ -8,13 +8,20 @@ class Workflow(models.Model):
     judgment = models.TextField()
     prediction = models.TextField()
 
+    def __str__(self):
+        return str(self.name)
+
 
 class Rater(models.Model):
-    api_id = models.PositiveIntegerField(unique=True)
+    api_id = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(unique=True, null=True)
     age = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} workflow:{}'.format(self.api_id, self.workflow)
 
 
 class Item(models.Model):
@@ -22,12 +29,18 @@ class Item(models.Model):
     url = models.URLField()
     category = models.CharField(max_length=255)
 
+    def __str__(self):
+        return '{} url:{}'.format(self.api_id, self.url)
+
 
 class ItemWorkflow(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE)
     workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
     raters_desired = models.PositiveIntegerField()
     raters_actual = models.PositiveIntegerField()
+
+    def __str__(self):
+        return 'item:{} workflow:{}'.format(self.item, self.workflow)
 
 
 class Answer(models.Model):
@@ -41,3 +54,6 @@ class Answer(models.Model):
     rater_answer_predict_b = models.TextField(blank=True, null=True)
     rater_answer_predict_c = models.TextField(blank=True, null=True)
     evidence_url = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return 'rater:{} item:{} workflow:{}'.format(self.rater, self.item, self.workflow)
