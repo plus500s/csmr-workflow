@@ -7,6 +7,7 @@ class Workflow(models.Model):
     instruction = models.TextField()
     judgment = models.TextField()
     prediction = models.TextField()
+    corroborating_question = models.TextField(default='Were you able to find any corroborating evidence?')
 
     def __str__(self):
         return str(self.name)
