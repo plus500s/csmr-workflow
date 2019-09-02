@@ -8,6 +8,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.idea/
 .Python
 build/
 develop-eggs/
@@ -68,6 +69,7 @@ target/
 .venv
 venv/
 ENV/
+env/
 
 # Rope project settings
 .ropeproject
@@ -321,7 +323,7 @@ tags
 
 ### Project template
 
-taskone/media/
+core/media/
 
 .pytest_cache/
 
@@ -332,5 +334,8 @@ taskone/media/
 !.envs/.local/
 /.idea/
 /.envs/
-!/.envs/
-!/.idea/
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/csmr-workflow.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml

@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  web:
+    image: web_image
+    build: .
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8080"
+    volumes:
+      - .:/app
+    env_file:
+      environment/local
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+  tests:
+    build:
+      dockerfile: Dockerfile-test
+      context: .
+    command: bash -c "prospector && coverage run --source='.' manage.py test --noinput -v 1 && coverage report"
+    volumes:
+      - .:/app
+    env_file:
+      environment/local
+    depends_on:
+       - db
+  selenium-hub:
+    image: selenium/hub:3.141.59-selenium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  firefox:
+    image: selenium/node-firefox:3.141.59-selenium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444

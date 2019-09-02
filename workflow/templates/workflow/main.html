@@ -1,0 +1,29 @@
+{% extends 'workflow/base.html' %}
+{% block messages %}
+{% if new_rater %}
+<div class="alert alert-success">
+Rater done
+</div>
+{% endif %}
+{% if old_rater %}
+<div class="alert alert-success">
+Rater authorized
+</div>
+{% endif %}
+{% if logout %}
+<div class="alert alert-success">
+Successful logout
+</div>
+{% endif %}
+{% if workflow %}
+<div class="alert alert-success">
+Workflow done
+</div>
+{% endif %}
+{% endblock %}
+{% block content %}
+    <h3>If you are not registered, please <a  href="{% url 'sign_up' %}">sign up</a></h3>
+    <h3>If you are registered, but not signed in, please <a href="{% url 'sign_in' %}">sign in</a></h3>
+    <h3>If you want to logout, please <a href="{% url 'logout' %}">logout</a></h3>
+    <h3>If you are singed in, please <a href="{% url 'workflow_form' %}">visit workflow page</a></h3>
+{% endblock %}

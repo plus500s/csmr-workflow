@@ -1,0 +1,9 @@
+language: python
+services:
+  - docker
+before_script:
+- sudo /etc/init.d/postgresql stop
+script:
+  - make  ci_tests
+notifications:
+  slack: csmr-group:ndbLQPC0yIQvGLSo3dLEAzPj
