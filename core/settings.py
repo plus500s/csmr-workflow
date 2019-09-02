@@ -81,6 +81,10 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

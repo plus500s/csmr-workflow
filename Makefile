@@ -3,6 +3,8 @@ start:
 
 stop:
 	docker-compose stop web
+	docker-compose stop celery
+	docker-compose stop rabbitmq
 	docker-compose stop db
 
 build_web:

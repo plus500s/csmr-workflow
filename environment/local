@@ -1,1 +1,11 @@
+# <--django-->
 SECRET_KEY=z1zt6%sz(bh1w$(dkfkpwf*ms2luc$(@hy=%r2uxa4ixx%v2-a
+
+# <--celery-->
+CELERY_BROKER_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672/
+
+# <--rabbitmq-->
+RABBITMQ_ERLANG_COOKIE=6085e2412b6fa88647466c6a81c0cea0
+RABBITMQ_DEFAULT_USER=rabbitmq
+RABBITMQ_DEFAULT_PASS=rabbitmq
+RABBITMQ_DEFAULT_VHOST=/

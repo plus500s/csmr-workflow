@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from .form import SignInForm, SignUpForm, WorkflowForm, JudgmentForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
+from .tasks import send_mail_task
 
 NONE_OF_THE_ABOVE_TUPLE = ('None of the above', 'None of the above')
 
@@ -20,6 +21,8 @@ def sign_up(request):
         form = SignUpForm(request.POST, instance=rater)
         if form.is_valid():
             request.session['rater_id'] = api_id
+            send_mail_task.delay(['noreply@admin.com'], 'Your rater-id.',
+                                 'Thank you.')
             form.save()
             return render(request, 'workflow/main.html', {'new_rater': 'done'})
         errors = [value for value in form.errors.values()]
