@@ -331,11 +331,8 @@ core/media/
 .ipython/
 .env
 .envs/*
-!.envs/.local/
-/.idea/
+/.idea/*
 /.envs/
-/.idea/inspectionProfiles/profiles_settings.xml
-/.idea/csmr-workflow.iml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/vcs.xml
+./celerybeat-schedule
+/data/rabbitmq/*
+/celerybeat-schedule
