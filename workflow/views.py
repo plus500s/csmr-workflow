@@ -3,15 +3,17 @@ from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from .form import SignInForm, SignUpForm, WorkflowForm, JudgmentForm
+from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentForm, WithoutEvidenceWorkflowForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
-from .tasks import send_mail_task
+from .choices import WORKFLOW_TYPE_CHOICES
+from . import alerts
 
 NONE_OF_THE_ABOVE_TUPLE = ('None of the above', 'None of the above')
 
 
 def main_view(request):
-    return render(request, 'workflow/main.html')
+    rater_id = request.session.get('rater_id')
+    return render(request, 'workflow/main.html', {'rater': rater_id})
 
 
 def sign_up(request):
@@ -21,10 +23,9 @@ def sign_up(request):
         form = SignUpForm(request.POST, instance=rater)
         if form.is_valid():
             request.session['rater_id'] = api_id
-            send_mail_task.delay(['noreply@admin.com'], 'Your rater-id.',
-                                 'Thank you.')
+            rater_id = api_id
             form.save()
-            return render(request, 'workflow/main.html', {'new_rater': 'done'})
+            return render(request, 'workflow/main.html', {'new_rater': 'done', 'rater': rater_id})
         errors = [value for value in form.errors.values()]
         form = SignUpForm()
         return render(request, 'workflow/sign_up.html',
@@ -45,9 +46,8 @@ def sign_in(request):
                 return render(request, 'workflow/sign_in.html', {
                     'form': form,
                     'error': True,
-                    'messages': ['User with current api_id does not exist',
-                                 'Please, try again or sign up as a new user.']})
-            return render(request, 'workflow/main.html', {'old_rater': 'done'})
+                    'messages': alerts.INVALID_USER_SIGN_IN_ALERTS})
+            return render(request, 'workflow/main.html', {'old_rater': 'done', 'rater': rater.api_id})
         errors = [value for value in form.errors.values()]
         form = SignInForm()
         return render(request, 'workflow/sign_up.html',
@@ -75,8 +75,7 @@ def workflow_form(request):  # noqa: too-many-locals
         return render(request, 'workflow/sign_in.html', {
             'form': SignInForm(),
             'error': True,
-            'messages': ['You are not signed in our system!',
-                         'Please, sign in to have an access to workflow page!']})
+            'messages': alerts.NOT_SIGNED_IN_USER_WORKFLOW_ALERTS})
 
     rater_id = request.session.get('rater_id')
     try:
@@ -84,13 +83,14 @@ def workflow_form(request):  # noqa: too-many-locals
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
-            'messages': ['Invalid User, please, try again']})
+            'messages': alerts.INVALID_USER_ALERTS})
     try:
         workflow = rater.workflow
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
-            'messages': ['Got no Workflow for this User']})
+            'messages': alerts.INVALID_WORKFLOW_ALERTS,
+            'rater': rater_id})
 
     def get_item(rater):
         used_items_for_user_ids = {answer.item_id for answer in Answer.objects.filter(rater=rater)}
@@ -102,16 +102,17 @@ def workflow_form(request):  # noqa: too-many-locals
 
     item = get_item(rater)
     if not item:
-        return render(request, 'workflow/main.html', {'error': True, 'workflow': 'done'})
+        return render(request, 'workflow/main.html', {'error': True, 'workflow': 'done', 'rater': rater_id})
 
     def get_no_workflow_form():
         return render(request, 'workflow/main.html', {
             'error': True,
-            'messages': ['Got no Workflow for this User']})
+            'messages': alerts.INVALID_WORKFLOW_ALERTS,
+            'rater': rater_id})
 
     def get_form(item, workflow, messages=None, error=False):
         if not item:
-            return render(request, 'workflow/main.html', {'error': True, 'workflow': 'done'})
+            return render(request, 'workflow/main.html', {'error': True, 'workflow': 'done', 'rater': rater_id})
         form = None
         initial = {
             'item': item.url,
@@ -120,9 +121,12 @@ def workflow_form(request):  # noqa: too-many-locals
             'judgment_question': workflow.judgment,
             'prediction_question': workflow.prediction,
         }
-        if workflow.name == 'workflow1':
-            form = WorkflowForm
-        if workflow.name == 'workflow2':
+
+        if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
+            form = WithoutEvidenceWorkflowForm
+        if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URL_INPUT_WORKFLOW:
+            form = EvidenceInputWorkflowForm
+        if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW:
             form = JudgmentForm
             try:
                 top_five_urls = sorted([answer.get('evidence_url') for answer in
@@ -139,7 +143,8 @@ def workflow_form(request):  # noqa: too-many-locals
             except (ObjectDoesNotExist, TypeError):
                 return render(request, 'workflow/main.html', {
                     'error': True,
-                    'messages': ['Got no answers to create corroborating choices']})
+                    'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
+                    'rater': rater_id})
         if not form:
             return get_no_workflow_form()
 
@@ -154,17 +159,19 @@ def workflow_form(request):  # noqa: too-many-locals
                 'error': error
             })
         except ObjectDoesNotExist:
-            return render(request, 'workflow/main.html', {'workflow': 'done'})
+            return render(request, 'workflow/main.html', {'workflow': 'done', 'rater': rater_id})
 
     def post_form():
         form = None
         evidence_url = None
-        if workflow.name == 'workflow1':
+        if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
+            form = WithoutEvidenceWorkflowForm(request.POST)
+        if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URL_INPUT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get(
                     'rater_answer_evidence'):
                 evidence_url = request.POST.get('evidence_url')
-            form = WorkflowForm(request.POST)
-        if workflow.name == 'workflow2':
+            form = EvidenceInputWorkflowForm(request.POST)
+        if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get('evidence_url') not in NONE_OF_THE_ABOVE_TUPLE:
                 evidence_url = request.POST.get('evidence_url')
             try:
@@ -183,7 +190,8 @@ def workflow_form(request):  # noqa: too-many-locals
             except (ObjectDoesNotExist, TypeError):
                 return render(request, 'workflow/main.html', {
                     'error': True,
-                    'messages': ['Got no answers to create corroborating choices']})
+                    'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
+                    'rater': rater_id})
 
         if form.is_valid():
             item = Item.objects.get(id=request.POST.get('item'))
@@ -203,18 +211,13 @@ def workflow_form(request):  # noqa: too-many-locals
                         item=get_item(rater),
                         workflow=workflow,
                         error=True,
-                        messages=[
-                            'Please, enter valid percentage for Prediction question.',
-                            'Sum of A, B and C answers should be 100.'
-                            'Please, try again.'])
+                        messages=alerts.PREDICTION_QUESTIONS_ALERTS)
             except TypeError:
                 return get_form(
                     item=get_item(rater),
                     workflow=workflow,
                     error=True,
-                    messages=[
-                        'Please, enter valid percentage for Prediction question.',
-                        'Please, try again.'])
+                    messages=alerts.PREDICTION_QUESTIONS_ALERTS)
             try:
                 Answer.objects.create(
                     rater=rater,
@@ -244,16 +247,12 @@ def workflow_form(request):  # noqa: too-many-locals
                     item=get_item(rater),
                     workflow=workflow,
                     error=True,
-                    messages=[
-                        'Something went wrong.',
-                        'Please, try again.'])
+                    messages=alerts.INTEGRITY_ERROR_ALERTS)
         else:
             return get_form(item=get_item(rater),
                             workflow=workflow,
                             error=True,
-                            messages=[
-                                'Not all required fields have been entered.',
-                                'Please, try again.'])
+                            messages=alerts.NOT_ALL_REQUIRED_FIELDS_ALERTS)
 
     if request.method == 'POST':
         return post_form()

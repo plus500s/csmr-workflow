@@ -190,3 +190,4 @@ class LogoutTest(SeleniumBaseRemoteTest):
 
         for alert in alerts:
             self.assertTrue(alert.text in self.SUCCESS_ALERTS)
+

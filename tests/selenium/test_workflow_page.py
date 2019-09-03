@@ -4,11 +4,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from selenium.common.exceptions import NoSuchElementException
 
 from workflow.models import Rater, Workflow, Item, Answer
+from workflow.alerts import INVALID_WORKFLOW_ALERTS
 from tests.selenium.base import SeleniumBaseRemoteTest
 
 
 WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
-INVALID_WORKFLOW_ALERTS = ['Got no Workflow for this User']
 
 
 class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
@@ -22,7 +22,8 @@ class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
                 name='invalid_workflow',
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type='invalid_type')
         rater = Rater.objects.create(
             email='test10@test.com',
             api_id='test_judgment10',
