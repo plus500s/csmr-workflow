@@ -1,3 +1,4 @@
+import os
 from celery.task import task
 from django.core.mail import send_mail
 
@@ -11,4 +12,4 @@ def send_mail_task(to, subject, body):
     :param body:
     :return:
     """
-    send_mail(subject=subject, message=body, recipient_list=to, from_email='admin@site.com')
+    send_mail(subject=subject, message=body, recipient_list=to, from_email=os.getenv('EMAIL_HOST_USER'))
