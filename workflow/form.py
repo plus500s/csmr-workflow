@@ -58,17 +58,17 @@ class BaseWorkflowForm(Form):
     rater_answer_predict_a = forms.IntegerField(
         max_value=100,
         min_value=0,
-        label='A',
+        label='Yes',
         widget=forms.NumberInput(attrs={'style': 'width:100px'}))
     rater_answer_predict_b = forms.IntegerField(
         max_value=100,
         min_value=0,
-        label='B',
+        label='No',
         widget=forms.NumberInput(attrs={'style': 'width:100px'}))
     rater_answer_predict_c = forms.IntegerField(
         max_value=100,
         min_value=0,
-        label='C',
+        label='Not sure',
         widget=forms.NumberInput(attrs={'style': 'width:100px'}))
 
 
@@ -87,7 +87,7 @@ class EvidenceInputWorkflowForm(BaseWorkflowForm):
         choices=EVIDENCE_CHOICES,
         widget=forms.RadioSelect)
     evidence_url = forms.URLField(
-        label='If Yes, please provide the URL you used to make your judgment',
+        label='If Yes, please provide the URL that provided the evidence you found most relevant and convincing.',
         required=False)
 
     field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',

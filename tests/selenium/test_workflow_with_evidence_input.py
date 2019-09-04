@@ -74,7 +74,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_c, '50')
         self.assertEqual(answer.rater.api_id, '1')
         self.assertEqual(answer.item.id, 1)
-        self.assertEqual(answer.rater_answer_judgment, 'False')
+        self.assertEqual(answer.rater_answer_judgment, 'True')
         self.assertEqual(answer.evidence_url, 'https://test.com')
 
 
