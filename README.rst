@@ -24,3 +24,6 @@ Using Makefile
 *  to run tests run::
 
     $ make run_tests
+* to add fixtures::
+
+    $ make add_fixtures

@@ -54,6 +54,7 @@ class Answer(models.Model):
     workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
     answer_start = models.DateTimeField()
     answer_end = models.DateTimeField()
+    rater_answer_evidence = models.TextField(blank=True, null=True)
     rater_answer_judgment = models.TextField(blank=True, null=True)
     rater_answer_predict_a = models.TextField(blank=True, null=True)
     rater_answer_predict_b = models.TextField(blank=True, null=True)
