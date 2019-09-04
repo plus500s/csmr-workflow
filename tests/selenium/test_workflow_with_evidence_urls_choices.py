@@ -90,7 +90,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_c, '60')
         self.assertEqual(answer.rater.api_id, 'test_judgment1')
         self.assertEqual(answer.item.id, 100)
-        self.assertEqual(answer.rater_answer_judgment, 'False')
+        self.assertEqual(answer.rater_answer_judgment, 'True')
         self.assertEqual(answer.evidence_url, 'https//test.evidence.com')
 
 
@@ -167,7 +167,7 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_c, '70')
         self.assertEqual(answer.rater.api_id, 'test_judgment2')
         self.assertEqual(answer.item.id, 5)
-        self.assertEqual(answer.rater_answer_judgment, 'False')
+        self.assertEqual(answer.rater_answer_judgment, 'True')
         self.assertEqual(answer.evidence_url, None)
 
 

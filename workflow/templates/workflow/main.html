@@ -29,7 +29,7 @@ Workflow done
     {% if rater %}
     <h3>If you want to logout, please <a href="{% url 'logout' %}">logout</a></h3>
     {% if not workflow %}
-    <h3>If you are singed in, please <a href="{% url 'workflow_form' %}">visit workflow page</a></h3>
+    <h3>If you are signed in, please <a href="{% url 'workflow_form' %}">visit workflow page</a></h3>
     {% endif %}
     {% endif %}
 {% endblock %}
