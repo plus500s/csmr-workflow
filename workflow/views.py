@@ -3,6 +3,9 @@ from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+
+from .email_templates import registration_rater_template
+from .tasks import send_mail_task
 from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentForm, WithoutEvidenceWorkflowForm
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow
 from .choices import WORKFLOW_TYPE_CHOICES
@@ -25,6 +28,12 @@ def sign_up(request):
             request.session['rater_id'] = api_id
             rater_id = api_id
             form.save()
+
+            subject, body = registration_rater_template
+            send_mail_task.delay(to=[form.cleaned_data['email']],
+                                 subject=subject,
+                                 body=body.format(rater_id))
+
             return render(request, 'workflow/main.html', {'new_rater': 'done', 'rater': rater_id})
         errors = [value for value in form.errors.values()]
         form = SignUpForm()
