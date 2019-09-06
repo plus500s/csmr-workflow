@@ -24,6 +24,11 @@ Using Makefile
 *  to run tests run::
 
     $ make run_tests
+
 * to add fixtures::
 
     $ make add_fixtures
+
+* to run selenium tests explicit **required firefox 42**::
+
+    $ make run_selenium
