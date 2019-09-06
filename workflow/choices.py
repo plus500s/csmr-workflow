@@ -8,7 +8,7 @@ EVIDENCE_CHOICES = (
 JUDGMENT_CHOICES = (
     ('True', 'Yes'),
     ('False', 'No'),
-    ('C. Im not sure', 'I\'m not sure. I would need more evidence to form a judgment'),
+    ('Im not sure', 'I\'m not sure. I would need more evidence to form a judgment'),
 )
 
 WORKFLOW_TYPE_CHOICES = Choices(

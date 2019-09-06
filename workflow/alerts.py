@@ -13,3 +13,5 @@ INVALID_USER_SIGN_IN_ALERTS = ['User with current api_id does not exist',
 NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS = ['Got no answers to create corroborating choices']
 INTEGRITY_ERROR_ALERTS = ['Something went wrong.',
                           'Please, try again.']
+INVALID_PREVIOUS_ITEM_ALERTS = ['Got no previous item for user',
+                                'Please, start with  workflow page.']

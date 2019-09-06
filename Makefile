@@ -21,7 +21,7 @@ ci_tests: build_web
 	docker-compose up -d firefox
 	docker-compose up --build  --exit-code-from tests
 
-run_fixtures:
+add_fixtures:
 	docker-compose exec web python manage.py loaddata fixtures/fixtures.json
 
 run_selenium:
