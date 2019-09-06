@@ -1,5 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
 
+from tests.utils import CatchInvalidSeleniumException
 from workflow.models import Rater, Workflow
 from tests.selenium.base import SeleniumBaseRemoteTest
 
@@ -39,10 +40,12 @@ class MainPageTest(SeleniumBaseRemoteTest):
 
         self.assertEqual(len(sign_in_text), 1)
         self.assertEqual(len(sign_up_text), 1)
-        with self.assertRaises(NoSuchElementException):
-            selenium.find_elements_by_id(LOGOUT_XPATH)
-        with self.assertRaises(NoSuchElementException):
-            selenium.find_elements_by_id(WORKFLOW_PAGE_XPATH)
+
+        with CatchInvalidSeleniumException(self):
+            with self.assertRaises(NoSuchElementException):
+                selenium.find_elements_by_id(LOGOUT_XPATH)
+            with self.assertRaises(NoSuchElementException):
+                selenium.find_elements_by_id(WORKFLOW_PAGE_XPATH)
 
     def test_with_login(self):
         for x in range(1, 5):
@@ -76,7 +79,9 @@ class MainPageTest(SeleniumBaseRemoteTest):
 
         self.assertEqual(len(logout_text), 1)
         self.assertEqual(len(workflow_page_text), 1)
-        with self.assertRaises(NoSuchElementException):
-            selenium.find_elements_by_id(SIGN_IN_XPATH)
-        with self.assertRaises(NoSuchElementException):
-            selenium.find_elements_by_id(SIGN_UP_XPATH)
+
+        with CatchInvalidSeleniumException(self):
+            with self.assertRaises(NoSuchElementException):
+                selenium.find_elements_by_id(SIGN_IN_XPATH)
+            with self.assertRaises(NoSuchElementException):
+                selenium.find_elements_by_id(SIGN_UP_XPATH)
