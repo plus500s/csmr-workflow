@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from unittest import mock
 from workflow.models import Rater, Workflow
 from tests.selenium.base import SeleniumBaseRemoteTest
 
@@ -33,7 +33,8 @@ class SignUpTest(SeleniumBaseRemoteTest):
 
         self.assertEqual(raters_count, 0)
 
-    def test_register(self):
+    @mock.patch('workflow.tasks.send_mail_task.delay')
+    def test_register(self, _):
         for x in range(1, 5):
             Workflow.objects.create(
                 api_id=x,

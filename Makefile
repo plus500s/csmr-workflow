@@ -23,3 +23,7 @@ ci_tests: build_web
 
 add_fixtures:
 	docker-compose exec web python manage.py loaddata fixtures/fixtures.json
+
+run_selenium:
+	docker-compose up -d db
+	tests/selenium/explicit_run.sh
