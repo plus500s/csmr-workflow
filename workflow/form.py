@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm, Form
 
+from .fields import RangeSliderField
+
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
 from .models import Rater
 
@@ -55,21 +57,27 @@ class BaseWorkflowForm(Form):
         disabled=True,
         widget=forms.Textarea(attrs={'rows': 2}),
         required=False)
-    rater_answer_predict_a = forms.IntegerField(
-        max_value=100,
-        min_value=0,
+    rater_answer_predict_a = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
         label='Yes',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
-    rater_answer_predict_b = forms.IntegerField(
-        max_value=100,
-        min_value=0,
+        name='rater_answer_predict_a'
+    )
+    rater_answer_predict_b = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
         label='No',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
-    rater_answer_predict_c = forms.IntegerField(
-        max_value=100,
-        min_value=0,
+        name='rater_answer_predict_b'
+    )
+    rater_answer_predict_c = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
         label='Not sure',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
+        name='rater_answer_predict_c'
+    )
 
 
 class WithoutEvidenceWorkflowForm(BaseWorkflowForm):
