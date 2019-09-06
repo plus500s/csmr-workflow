@@ -8,7 +8,6 @@ case "${unameOut}" in
     Linux*)     export PATH=$PATH:tests/selenium/geckodriver/linux;;
     Darwin*)    export PATH=$PATH:tests/selenium/geckodriver/mac;;
 esac
-export PATH=$PATH:tests/selenium/geckodriver/
 export $(grep -v '^#' environment/test_local | xargs)
 pip install -r requirements/test.txt
 python manage.py test tests/selenium/ --noinput
