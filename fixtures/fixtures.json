@@ -1,12 +1,12 @@
 [
-    {
+  {
     "model": "workflow.workflow",
     "pk": 1,
     "fields": {
       "api_id": 1,
       "name": "without evidence url workflow",
       "instruction": "instruction for without evidence url workflow",
-      "judgment": "Is the item: (select only one radio button that applies)",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "",
       "type": "without evidence url workflow"
@@ -19,7 +19,7 @@
       "api_id": 2,
       "name": "evidence url input workflow",
       "instruction": "instruction for evidence url input workflow",
-      "judgment": "Is the item: (select only one radio button that applies)",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "Were you able to find any corroborating evidence?",
       "type": "evidence url input workflow"
@@ -32,7 +32,7 @@
       "api_id": 3,
       "name": "evidence urls judgment workflow",
       "instruction": "instruction for evidence urls judgment workflow",
-      "judgment": "Is the item: (select only one radio button that applies)",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "Following are a list of links that are likely to contain corroborating evidence. Select the link that you found most useful to make your judgment.",
       "type": "evidence urls judgment workflow"
@@ -257,6 +257,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:52:51Z",
       "answer_end": "2019-08-26T10:52:55Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
@@ -273,6 +274,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:53:07Z",
       "answer_end": "2019-08-26T10:53:12Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
@@ -289,6 +291,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:58:02.155Z",
       "answer_end": "2019-08-26T10:58:05.913Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
@@ -353,6 +356,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:52:51Z",
       "answer_end": "2019-08-26T10:52:55Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
@@ -369,6 +373,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:53:07Z",
       "answer_end": "2019-08-26T10:53:12Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
@@ -385,6 +390,7 @@
       "workflow": 2,
       "answer_start": "2019-08-26T10:58:02.155Z",
       "answer_end": "2019-08-26T10:58:05.913Z",
+      "rater_answer_evidence": "True",
       "rater_answer_judgment": "True",
       "rater_answer_predict_a": "10",
       "rater_answer_predict_b": "20",
