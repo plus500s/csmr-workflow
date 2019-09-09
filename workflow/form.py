@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, Form
 
-from .fields import RangeSliderField
+from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField
 
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
 from .models import Rater
@@ -36,26 +36,25 @@ class SignInForm(Form):
 
 
 class BaseWorkflowForm(Form):
-    instruction = forms.Field(
-        disabled=True,
-        widget=forms.Textarea(attrs={'rows': 4}),
-        required=False)
-    item = forms.URLField(
+    instruction = ModelInitialTextAreaField(
+        label='<h3><strong>Instruction:</strong></h3>',
         disabled=True,
         required=False)
-    judgment_question = forms.Field(
-        label='<strong>Judgment question:</strong>',
+    item = UrlItemField(
+        label='<h3><strong>Item:</strong></h3>',
         disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
+        required=False)
+    judgment_question = ModelInitialTextAreaField(
+        label='<h3><strong>Judgment question:</strong></h3>',
+        disabled=True,
         required=False)
     rater_answer_judgment = forms.ChoiceField(
         label='',
         choices=JUDGMENT_CHOICES,
         widget=forms.RadioSelect)
-    prediction_question = forms.Field(
-        label='<strong>Prediction question:</strong>',
+    prediction_question = ModelInitialTextAreaField(
+        label='<h3><strong>Prediction question:</strong></h3>',
         disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
         required=False)
     rater_answer_predict_a = RangeSliderField(
         max=100,
@@ -85,10 +84,9 @@ class WithoutEvidenceWorkflowForm(BaseWorkflowForm):
 
 
 class EvidenceInputWorkflowForm(BaseWorkflowForm):
-    corroborating_question = forms.Field(
-        label='<strong>Corroborating evidence:</strong>',
+    corroborating_question = ModelInitialTextAreaField(
+        label='<h3><strong>Corroborating evidence:</strong></h3>',
         disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
         required=False)
     rater_answer_evidence = forms.ChoiceField(
         label='',
@@ -115,10 +113,9 @@ class JudgmentForm(BaseWorkflowForm):
             label='',
             choices=self.evidence_url_choices,
             widget=forms.RadioSelect)
-        self.fields['corroborating_question'] = forms.Field(
-            label='<strong>Corroborating evidence:</strong>',
+        self.fields['corroborating_question'] = ModelInitialTextAreaField(
+            label='<h3><strong>Corroborating evidence:</strong></h3>',
             disabled=True,
-            widget=forms.Textarea(attrs={'rows': 2}),
             required=False)
         self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
                            'judgment_question', 'rater_answer_judgment', 'prediction_question',

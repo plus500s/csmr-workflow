@@ -9,9 +9,6 @@ from .utils import send_predict_keys, set_predict_keys_to_zero
 WORKFLOW_NAME = 'workflow1'
 WORKFLOW_TYPE = WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW
 
-WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success"]'
-WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
-
 SIGN_IN_TEXT = ['Sign in']
 SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 
