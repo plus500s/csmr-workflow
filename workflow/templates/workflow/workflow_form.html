@@ -3,16 +3,10 @@
 {% block extra_loads %}
     {% load crispy_forms_tags %}
 {% endblock %}
-{% block form_name %}
-    Workflow form
-{% endblock %}
 {% block content %}
     {% load static %}
     {% load staticfiles %}
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+
     <script src="{% static 'workflow/js/rangeslider.js' %}"></script>
     <link rel="stylesheet" href="{% static 'workflow/css/rangeslider.css' %}">
     <form action="{% url 'workflow_form' %}" method="post" id="form">

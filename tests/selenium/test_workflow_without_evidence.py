@@ -1,7 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-
 
 from workflow.models import Rater, Workflow, Item, Answer
 from workflow.choices import WORKFLOW_TYPE_CHOICES
@@ -13,8 +11,8 @@ from .utils import send_predict_keys
 WORKFLOW_NAME = 'workflow1'
 WORKFLOW_TYPE = WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW
 
-WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success"]'
-WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
+WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success alert-dismissible fade show"]'
+WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning alert-dismissible fade show"]'
 
 SIGN_IN_TEXT = ['Sign in']
 SIGN_IN_XPATH = '//h1[@class="mt-2"]'
@@ -126,7 +124,7 @@ class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
             key_c=50)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, NOT_ALL_REQUIRED_FIELDS_ALERTS)
         self.assertEqual(Answer.objects.all().count(), 0)
 
@@ -224,7 +222,7 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
             key_c=100)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, PREDICTION_QUESTIONS_ALERTS)
         self.assertEqual(Answer.objects.all().count(), 0)
 
@@ -259,7 +257,7 @@ class WorkflowWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, INVALID_USER_ALERTS)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
@@ -306,9 +304,9 @@ class WorkflowWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, NOT_SIGNED_IN_USER_WORKFLOW_ALERTS)
-        sign_in_text = [sign_in.text for sign_in in selenium.find_elements_by_xpath(SIGN_IN_XPATH)]
+        sign_in_text = [sign_in.text.replace('\n×', '') for sign_in in selenium.find_elements_by_xpath(SIGN_IN_XPATH)]
         self.assertEqual(sign_in_text, SIGN_IN_TEXT)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')

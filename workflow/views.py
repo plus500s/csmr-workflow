@@ -11,7 +11,7 @@ from .models import Rater, Answer, Item, Workflow, ItemWorkflow
 from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
 
-NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above')
+NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
 
 
 def main_view(request):

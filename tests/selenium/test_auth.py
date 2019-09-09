@@ -97,7 +97,7 @@ class SignInTest(SeleniumBaseRemoteTest):
         submit.click()
         alerts = selenium.find_elements_by_xpath('//div[@class="alert alert-success"]')
         for alert in alerts:
-            self.assertTrue(alert.text in self.UN_SUCCESS_ALERTS)
+            self.assertTrue(alert.text.replace('\n×', '') in self.UN_SUCCESS_ALERTS)
 
     def test_sign_in(self):
         for x in range(1, 5):
@@ -126,7 +126,7 @@ class SignInTest(SeleniumBaseRemoteTest):
         alerts = selenium.find_elements_by_xpath('//div[@class="alert alert-success"]')
 
         for alert in alerts:
-            self.assertTrue(alert.text in self.SUCCESS_ALERTS)
+            self.assertTrue(alert.text.replace('\n×', '') in self.SUCCESS_ALERTS)
 
 
 class LogoutTest(SeleniumBaseRemoteTest):
@@ -160,7 +160,7 @@ class LogoutTest(SeleniumBaseRemoteTest):
 
         alerts = selenium.find_elements_by_xpath('//div[@class="alert alert-success"]')
         for alert in alerts:
-            self.assertTrue(alert.text in self.UN_SUCCESS_ALERTS)
+            self.assertTrue(alert.text.replace('\n×', '') in self.UN_SUCCESS_ALERTS)
 
     def test_logout(self):
         for x in range(1, 5):
@@ -190,5 +190,5 @@ class LogoutTest(SeleniumBaseRemoteTest):
         alerts = selenium.find_elements_by_xpath('//div[@class="alert alert-success"]')
 
         for alert in alerts:
-            self.assertTrue(alert.text in self.SUCCESS_ALERTS)
+            self.assertTrue(alert.text.replace('\n×', '') in self.SUCCESS_ALERTS)
 

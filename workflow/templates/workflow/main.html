@@ -1,23 +1,35 @@
 {% extends 'workflow/base.html' %}
 {% block messages %}
     {% if new_rater %}
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show">
             Rater done
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     {% endif %}
     {% if old_rater %}
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show">
             Rater authorized
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     {% endif %}
     {% if logout %}
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show">
             Successful logout
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     {% endif %}
     {% if workflow %}
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show">
             Workflow done
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     {% endif %}
 {% endblock %}

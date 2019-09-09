@@ -12,8 +12,8 @@ from .utils import send_predict_keys
 
 WORKFLOW_NAME = 'workflow2'
 WORKFLOW_TYPE = WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW
-WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success"]'
-WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
+WORKFLOW_DONE_ALERT_XPATH = '//div[@class="alert alert-success alert-dismissible fade show"]'
+WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning alert-dismissible fade show"]'
 SIGN_IN_TEXT = ['Sign in']
 SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 
@@ -86,7 +86,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
                         key_c=60)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
         self.assertEqual(alerts, WORKFLOW_DONE_ALERTS)
         answer = Answer.objects.get(rater=rater, item=item, workflow=workflow)
         self.assertEqual(Answer.objects.all().count(), 2)
@@ -167,7 +167,7 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
             key_c=70)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
         self.assertEqual(alerts, WORKFLOW_DONE_ALERTS)
         answer = Answer.objects.get(rater=rater, item=item, workflow=workflow)
         self.assertEqual(Answer.objects.all().count(), 2)
@@ -221,7 +221,7 @@ class JudgmentWithAlreadyDoneWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WORKFLOW_DONE_ALERT_XPATH)]
         self.assertEqual(alerts, WORKFLOW_DONE_ALERTS)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
@@ -306,7 +306,7 @@ class JudgmentWithoutEvidenceTest(SeleniumBaseRemoteTest):
             key_b=30,
             key_c=60)
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, NOT_ALL_REQUIRED_FIELDS_ALERTS)
         with self.assertRaises(ObjectDoesNotExist):
             Answer.objects.get(rater=rater, item=item, workflow=workflow)
@@ -380,7 +380,7 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
             key_c=60)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, NOT_ALL_REQUIRED_FIELDS_ALERTS)
         with self.assertRaises(ObjectDoesNotExist):
             Answer.objects.get(rater=rater, item=item, workflow=workflow)
@@ -522,7 +522,7 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
             key_c=100)
 
         submit.click()
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, PREDICTION_QUESTIONS_ALERTS)
         with self.assertRaises(ObjectDoesNotExist):
             Answer.objects.get(rater=rater, item=item, workflow=workflow)
@@ -577,7 +577,7 @@ class JudgmentWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, INVALID_USER_ALERTS)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
@@ -644,9 +644,9 @@ class JudgmentWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, NOT_SIGNED_IN_USER_WORKFLOW_ALERTS)
-        sign_in_text = [sign_in.text for sign_in in selenium.find_elements_by_xpath(SIGN_IN_XPATH)]
+        sign_in_text = [sign_in.text.replace('\n×', '') for sign_in in selenium.find_elements_by_xpath(SIGN_IN_XPATH)]
         self.assertEqual(sign_in_text, SIGN_IN_TEXT)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
