@@ -3,6 +3,7 @@ from datetime import datetime
 from workflow.models import Rater, Workflow, Item, Answer
 from workflow.choices import WORKFLOW_TYPE_CHOICES
 from tests.selenium.base import SeleniumBaseRemoteTest
+from .utils import send_predict_keys, set_predict_keys_to_zero
 
 
 WORKFLOW_NAME = 'workflow1'
@@ -72,15 +73,22 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
         self.assertEqual(rater_answer_predict_b.get_attribute('value'), '20')
         self.assertEqual(rater_answer_predict_c.get_attribute('value'), '70')
 
-        rater_answer_predict_a.clear()
-        rater_answer_predict_b.clear()
-        rater_answer_predict_c.clear()
+        set_predict_keys_to_zero(
+            predict_a=rater_answer_predict_a,
+            predict_b=rater_answer_predict_b,
+            predict_c=rater_answer_predict_c,
+            key_a=10,
+            key_b=20,
+            key_c=70)
         rater_answer_judgment_true.click()
-        rater_answer_predict_a.send_keys('70')
-        rater_answer_predict_b.send_keys('20')
-        rater_answer_predict_c.send_keys('10')
+        send_predict_keys(
+            predict_a=rater_answer_predict_a,
+            predict_b=rater_answer_predict_b,
+            predict_c=rater_answer_predict_c,
+            key_a=70,
+            key_b=20,
+            key_c=10)
 
-        # selenium.execute_script("document.getElementById('submit').click()")
         submit.click()
         self.assertEqual(Answer.objects.all().count(), 1)
         answer = Answer.objects.get(rater=rater, item=previous_item, workflow=workflow)
