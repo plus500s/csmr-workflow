@@ -2,6 +2,8 @@ output-format: grouped
 
 ignore-paths:
   - build
+  - migrations
+  - tests
 
 pylint:
   disable:

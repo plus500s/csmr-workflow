@@ -4,11 +4,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from selenium.common.exceptions import NoSuchElementException
 
 from workflow.models import Rater, Workflow, Item, Answer
+from workflow.alerts import INVALID_WORKFLOW_ALERTS
 from tests.selenium.base import SeleniumBaseRemoteTest
 
 
-WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning"]'
-INVALID_WORKFLOW_ALERTS = ['Got no Workflow for this User']
+WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning alert-dismissible fade show"]'
 
 
 class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
@@ -22,7 +22,8 @@ class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
                 name='invalid_workflow',
                 instruction=x,
                 judgment=x,
-                prediction=x)
+                prediction=x,
+                type='invalid_type')
         rater = Rater.objects.create(
             email='test10@test.com',
             api_id='test_judgment10',
@@ -58,7 +59,7 @@ class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        alerts = [alert.text for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
+        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
         self.assertEqual(alerts, INVALID_WORKFLOW_ALERTS)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')

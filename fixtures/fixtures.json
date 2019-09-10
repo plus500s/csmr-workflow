@@ -1,0 +1,419 @@
+[
+  {
+    "model": "workflow.workflow",
+    "pk": 1,
+    "fields": {
+      "api_id": 1,
+      "name": "without evidence url workflow",
+      "instruction": "instruction for without evidence url workflow",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
+      "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
+      "corroborating_question": "",
+      "type": "without evidence url workflow"
+    }
+  },
+  {
+    "model": "workflow.workflow",
+    "pk": 2,
+    "fields": {
+      "api_id": 2,
+      "name": "evidence url input workflow",
+      "instruction": "instruction for evidence url input workflow",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
+      "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
+      "corroborating_question": "Were you able to find any corroborating evidence?",
+      "type": "evidence url input workflow"
+    }
+  },
+  {
+    "model": "workflow.workflow",
+    "pk": 3,
+    "fields": {
+      "api_id": 3,
+      "name": "evidence urls judgment workflow",
+      "instruction": "instruction for evidence urls judgment workflow",
+      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
+      "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
+      "corroborating_question": "Following are a list of links that are likely to contain corroborating evidence. Select the link that you found most useful to make your judgment.",
+      "type": "evidence urls judgment workflow"
+    }
+  },
+  {
+    "model": "workflow.rater",
+    "pk": 1,
+    "fields": {
+      "api_id": "1",
+      "email": "test1@test.com",
+      "age": "21",
+      "gender": "f",
+      "location": "Detroit",
+      "workflow": 1
+    }
+  },
+  {
+    "model": "workflow.rater",
+    "pk": 2,
+    "fields": {
+      "api_id": "2",
+      "email": "test2@test.com",
+      "age": "22",
+      "gender": "m",
+      "location": "Kiev",
+      "workflow": 2
+    }
+  },
+  {
+    "model": "workflow.rater",
+    "pk": 3,
+    "fields": {
+      "api_id": "3",
+      "email": "test3@test.com",
+      "age": "23",
+      "gender": "m",
+      "location": "Kharkiv",
+      "workflow": 3
+    }
+  },
+  {
+    "model": "workflow.rater",
+    "pk": 4,
+    "fields": {
+      "api_id": "4",
+      "email": "test4@test.com",
+      "age": "24",
+      "gender": "f",
+      "location": "Kharkiv",
+      "workflow": 2
+    }
+  },
+  {
+    "model": "workflow.item",
+    "pk": 1,
+    "fields": {
+      "api_id": 1,
+      "url": "https://azcapitoltimes.com",
+      "category": "category1"
+    }
+  },
+  {
+    "model": "workflow.item",
+    "pk": 2,
+    "fields": {
+      "api_id": 2,
+      "url": "https://www.i24news.tv",
+      "category": "category2"
+    }
+  },
+  {
+    "model": "workflow.item",
+    "pk": 3,
+    "fields": {
+      "api_id": 3,
+      "url": "https://nypost.com",
+      "category": "category3"
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 1,
+    "fields": {
+      "item": 1,
+      "workflow": 1,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 2,
+    "fields": {
+      "item": 1,
+      "workflow": 2,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 3,
+    "fields": {
+      "item": 1,
+      "workflow": 3,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 4,
+    "fields": {
+      "item": 2,
+      "workflow": 1,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 6,
+    "fields": {
+      "item": 2,
+      "workflow": 2,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 7,
+    "fields": {
+      "item": 2,
+      "workflow": 3,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 8,
+    "fields": {
+      "item": 3,
+      "workflow": 1,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 9,
+    "fields": {
+      "item": 3,
+      "workflow": 2,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.itemworkflow",
+    "pk": 10,
+    "fields": {
+      "item": 3,
+      "workflow": 3,
+      "raters_desired": 0,
+      "raters_actual": 4
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 1,
+    "fields": {
+      "rater": 1,
+      "item": 1,
+      "workflow": 1,
+      "answer_start": "2019-08-23T15:27:32Z",
+      "answer_end": "2019-08-23T15:27:50Z",
+      "rater_answer_judgment": "False",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 2,
+    "fields": {
+      "rater": 1,
+      "item": 2,
+      "workflow": 1,
+      "answer_start": "2019-08-23T15:27:32Z",
+      "answer_end": "2019-08-23T15:30:42Z",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 3,
+    "fields": {
+      "rater": 1,
+      "item": 3,
+      "workflow": 1,
+      "answer_start": "2019-08-26T09:55:54.361Z",
+      "answer_end": "2019-08-26T10:52:51.726Z",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 4,
+    "fields": {
+      "rater": 2,
+      "item": 1,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:52:51Z",
+      "answer_end": "2019-08-26T10:52:55Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_first_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 5,
+    "fields": {
+      "rater": 2,
+      "item": 2,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:53:07Z",
+      "answer_end": "2019-08-26T10:53:12Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_second_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 6,
+    "fields": {
+      "rater": 2,
+      "item": 3,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:58:02.155Z",
+      "answer_end": "2019-08-26T10:58:05.913Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_third_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 7,
+    "fields": {
+      "rater": 3,
+      "item": 1,
+      "workflow": 3,
+      "answer_start": "2019-08-26T10:58:15Z",
+      "answer_end": "2019-08-26T10:58:17Z",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_first_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 8,
+    "fields": {
+      "rater": 3,
+      "item": 2,
+      "workflow": 3,
+      "answer_start": "2019-08-26T10:58:17Z",
+      "answer_end": "2019-08-26T10:58:18Z",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_second_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 9,
+    "fields": {
+      "rater": 3,
+      "item": 3,
+      "workflow": 3,
+      "answer_start": "2019-08-26T11:29:02.499Z",
+      "answer_end": "2019-08-26T11:29:11.206Z",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence1_for_third_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 10,
+    "fields": {
+      "rater": 4,
+      "item": 1,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:52:51Z",
+      "answer_end": "2019-08-26T10:52:55Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence2_for_first_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 11,
+    "fields": {
+      "rater": 4,
+      "item": 2,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:53:07Z",
+      "answer_end": "2019-08-26T10:53:12Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence2_for_second_item.com"
+    }
+  },
+  {
+    "model": "workflow.answer",
+    "pk": 12,
+    "fields": {
+      "rater": 4,
+      "item": 3,
+      "workflow": 2,
+      "answer_start": "2019-08-26T10:58:02.155Z",
+      "answer_end": "2019-08-26T10:58:05.913Z",
+      "rater_answer_evidence": "True",
+      "rater_answer_judgment": "True",
+      "rater_answer_predict_a": "10",
+      "rater_answer_predict_b": "20",
+      "rater_answer_predict_c": "70",
+      "evidence_url": "https://www.evidence2_for_third_item.com"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$9WE91jSDUJII$6VlqGDO/fUYJJVwb8Ye5EBgCY64X/22UL1DMFnkXX2U=",
+      "last_login": "2019-08-23T14:05:21.982Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2019-08-23T14:04:42.541Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

@@ -73,17 +73,26 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
+if DEBUG and os.getenv('USE_EMAIL_IN_DEBUG') == 'False':
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+elif not DEBUG or os.getenv('USE_EMAIL_IN_DEBUG') == 'True':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.getenv('EMAIL_HOST')
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+    EMAIL_PORT = os.getenv('EMAIL_PORT')
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -118,5 +127,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = ''
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]

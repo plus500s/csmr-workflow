@@ -1,0 +1,15 @@
+# <--django-->
+SECRET_KEY=z1zt6%sz(bh1w$(dkfkpwf*ms2luc$(@hy=%r2uxa4ixx%v2-a
+
+# <--db-->
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
+
+# <--tests-->
+TEST_HOST=localhost
+
+# <--email-->
+USE_EMAIL_IN_DEBUG=False

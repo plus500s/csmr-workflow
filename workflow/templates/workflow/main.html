@@ -1,29 +1,60 @@
 {% extends 'workflow/base.html' %}
 {% block messages %}
-{% if new_rater %}
-<div class="alert alert-success">
-Rater done
-</div>
-{% endif %}
-{% if old_rater %}
-<div class="alert alert-success">
-Rater authorized
-</div>
-{% endif %}
-{% if logout %}
-<div class="alert alert-success">
-Successful logout
-</div>
-{% endif %}
-{% if workflow %}
-<div class="alert alert-success">
-Workflow done
-</div>
-{% endif %}
+    {% if new_rater %}
+        <div class="alert alert-success alert-dismissible fade show">
+            Rater done
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+    {% if old_rater %}
+        <div class="alert alert-success alert-dismissible fade show">
+            Rater authorized
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+    {% if logout %}
+        <div class="alert alert-success alert-dismissible fade show">
+            Successful logout
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+    {% if workflow %}
+        <div class="alert alert-success alert-dismissible fade show">
+            Workflow done
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
 {% endblock %}
 {% block content %}
-    <h3>If you are not registered, please <a  href="{% url 'sign_up' %}">sign up</a></h3>
-    <h3>If you are registered, but not signed in, please <a href="{% url 'sign_in' %}">sign in</a></h3>
-    <h3>If you want to logout, please <a href="{% url 'logout' %}">logout</a></h3>
-    <h3>If you are singed in, please <a href="{% url 'workflow_form' %}">visit workflow page</a></h3>
+    {% if not rater %}
+        <h3>If you are not registered, please <a href="{% url 'sign_up' %}">sign up</a></h3>
+        <h3>If you are registered, but not signed in, please <a href="{% url 'sign_in' %}">sign in</a></h3>
+    {% endif %}
+    {% if rater %}
+        {% if all_items and used_items %}
+            {% if all_items != used_items %}
+                <h3>You have done {{ used_items }} of {{ all_items }} items.</h3>
+                <h3>To continue with new item, please visit <a href="{% url 'workflow_form' %}">workflow page</a>.
+                </h3>
+                <h3>Or return to previous item on <a href="{% url 'previous_item' %}">previous item workflow
+                    page</a>.</h3>
+            {% endif %}
+            {% if all_items == used_items %}
+                <h3>You have done all {{ all_items }} of {{ all_items }} items.</h3>
+            {% endif %}
+        {% endif %}
+        {% if all_items and not used_items %}
+            <h3>You have done 0 of {{ all_items }} items.</h3>
+            <h3>To start, please visit <a href="{% url 'workflow_form' %}">workflow page</a>.</h3>
+        {% endif %}
+        <h3>If you want to logout, please <a href="{% url 'logout' %}">logout</a></h3>
+    {% endif %}
 {% endblock %}

@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm, Form
 
+from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField
+
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
 from .models import Rater
 
@@ -33,60 +35,76 @@ class SignInForm(Form):
     )
 
 
-class WorkflowForm(Form):
-    instruction = forms.Field(
-        disabled=True,
-        widget=forms.Textarea(attrs={'rows': 4}),
-        required=False)
-    item = forms.URLField(
+class BaseWorkflowForm(Form):
+    instruction = ModelInitialTextAreaField(
+        label='<h3><strong>Instruction:</strong></h3>',
         disabled=True,
         required=False)
-    corroborating_question = forms.Field(
-        label='<strong>Corroborating evidence:</strong>',
+    item = UrlItemField(
+        label='<h3><strong>Item:</strong></h3>',
         disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
+        required=False)
+    judgment_question = ModelInitialTextAreaField(
+        label='<h3><strong>Judgment question:</strong></h3>',
+        disabled=True,
+        required=False)
+    rater_answer_judgment = forms.ChoiceField(
+        label='',
+        choices=JUDGMENT_CHOICES,
+        widget=forms.RadioSelect)
+    prediction_question = ModelInitialTextAreaField(
+        label='<h3><strong>Prediction question:</strong></h3>',
+        disabled=True,
+        required=False)
+    rater_answer_predict_a = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
+        label='Yes',
+        name='rater_answer_predict_a'
+    )
+    rater_answer_predict_b = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
+        label='No',
+        name='rater_answer_predict_b'
+    )
+    rater_answer_predict_c = RangeSliderField(
+        max=100,
+        min=0,
+        step=5,
+        label='Not sure',
+        name='rater_answer_predict_c'
+    )
+
+
+class WithoutEvidenceWorkflowForm(BaseWorkflowForm):
+    pass
+
+
+class EvidenceInputWorkflowForm(BaseWorkflowForm):
+    corroborating_question = ModelInitialTextAreaField(
+        label='<h3><strong>Corroborating evidence:</strong></h3>',
+        disabled=True,
         required=False)
     rater_answer_evidence = forms.ChoiceField(
         label='',
         choices=EVIDENCE_CHOICES,
         widget=forms.RadioSelect)
     evidence_url = forms.URLField(
-        label='If Yes, please provide the URL you used to make your judgment',
+        label='If Yes, please provide the URL that provided the evidence you found most relevant and convincing.',
         required=False)
-    judgment_question = forms.Field(
-        label='<strong>Judgment question:</strong>',
-        disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
-        required=False)
-    rater_answer_judgment = forms.ChoiceField(
-        label='',
-        choices=JUDGMENT_CHOICES,
-        widget=forms.RadioSelect)
-    prediction_question = forms.Field(
-        label='<strong>Prediction question:</strong>',
-        disabled=True,
-        widget=forms.Textarea(attrs={'rows': 2}),
-        required=False)
-    rater_answer_predict_a = forms.IntegerField(
-        max_value=100,
-        min_value=0,
-        label='A',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
-    rater_answer_predict_b = forms.IntegerField(
-        max_value=100,
-        min_value=0,
-        label='B',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
-    rater_answer_predict_c = forms.IntegerField(
-        max_value=100,
-        min_value=0,
-        label='C',
-        widget=forms.NumberInput(attrs={'style': 'width:100px'}))
+
+    field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',
+                   'judgment_question', 'rater_answer_judgment', 'prediction_question', 'rater_answer_predict_a',
+                   'rater_answer_predict_b', 'rater_answer_predict_c']
 
 
-class JudgmentForm(WorkflowForm):
+class JudgmentForm(BaseWorkflowForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         try:
             self.evidence_url_choices = kwargs.get('initial').get('evidence_url_choices')
         except AttributeError:
@@ -95,4 +113,11 @@ class JudgmentForm(WorkflowForm):
             label='',
             choices=self.evidence_url_choices,
             widget=forms.RadioSelect)
-        self.fields.pop('rater_answer_evidence')
+        self.fields['corroborating_question'] = ModelInitialTextAreaField(
+            label='<h3><strong>Corroborating evidence:</strong></h3>',
+            disabled=True,
+            required=False)
+        self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
+                           'judgment_question', 'rater_answer_judgment', 'prediction_question',
+                           'rater_answer_predict_a',
+                           'rater_answer_predict_b', 'rater_answer_predict_c'])

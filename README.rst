@@ -21,6 +21,14 @@ Using Makefile
 
     $ make stop
 
-*  to run tests run::
+*  to run tests run (if you want run specific test run **make run_tests args=tests.selenium.test_auth)**::
 
     $ make run_tests
+
+* to add fixtures::
+
+    $ make add_fixtures
+
+* to run selenium tests explicit **required firefox 42** (if you want run specific test run **make run_selenium args=tests.selenium.test_auth)**::
+
+    $ make run_selenium
