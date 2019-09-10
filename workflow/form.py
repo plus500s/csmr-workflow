@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, Form
 
-from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField
+from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField, EvidenceUrlChoicesField
 
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
 from .models import Rater
@@ -109,10 +109,9 @@ class JudgmentForm(BaseWorkflowForm):
             self.evidence_url_choices = kwargs.get('initial').get('evidence_url_choices')
         except AttributeError:
             self.evidence_url_choices = []
-        self.fields['evidence_url'] = forms.ChoiceField(
+        self.fields['evidence_url'] = EvidenceUrlChoicesField(
             label='',
-            choices=self.evidence_url_choices,
-            widget=forms.RadioSelect)
+            choices=self.evidence_url_choices)
         self.fields['corroborating_question'] = ModelInitialTextAreaField(
             label='<h3><strong>Corroborating evidence:</strong></h3>',
             disabled=True,

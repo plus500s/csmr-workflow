@@ -1,11 +1,12 @@
 NOT_ALL_REQUIRED_FIELDS_ALERTS = ['Not all required fields have been entered.',
                                   'Please, try again.']
 WORKFLOW_DONE_ALERTS = ['Workflow done']
-PREDICTION_QUESTIONS_ALERTS = ['Please, enter valid percentage for Prediction question.',
-                               'Sum of A, B and C answers should be 100.'
+PREDICTION_QUESTIONS_ALERTS = ['Please, enter valid percentage for Prediction Question.',
+                               'The sum of your answers for the Prediction Question should be 100.',
                                'Please, try again.']
 INVALID_WORKFLOW_ALERTS = ['Got no Workflow for this User']
-INVALID_USER_ALERTS = ['Invalid User, please, try again']
+INVALID_USER_ALERTS = ['Invalid User.',
+                       'Please, try again']
 NOT_SIGNED_IN_USER_WORKFLOW_ALERTS = ['You are not signed in our system!',
                                       'Please, sign in to have an access to workflow page!']
 INVALID_USER_SIGN_IN_ALERTS = ['User with current api_id does not exist',

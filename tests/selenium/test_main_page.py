@@ -3,10 +3,10 @@ from tests.utils import CatchInvalidSeleniumException
 from workflow.models import Item, Rater, Workflow
 from tests.selenium.base import SeleniumBaseRemoteTest
 
-LOGOUT_XPATH = '//div[@class="col-8"]/h3/a[contains(., "logout")]'
-WORKFLOW_PAGE_XPATH = '//div[@class="col-8"]/h3/a[contains(., "workflow page")]'
-SIGN_IN_XPATH = '//div[@class="col-8"]/h3/a[contains(., "sign in")]'
-SIGN_UP_XPATH = '//div[@class="col-8"]/h3/a[contains(., "sign up")]'
+LOGOUT_XPATH = '//h3/a[contains(., "logout")]'
+WORKFLOW_PAGE_XPATH = '//h3/a[contains(., "workflow page")]'
+SIGN_IN_XPATH = '//h3/a[contains(., "sign in")]'
+SIGN_UP_XPATH = '//h3/a[contains(., "sign up")]'
 
 
 class MainPageTest(SeleniumBaseRemoteTest):

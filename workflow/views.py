@@ -32,6 +32,12 @@ def main_view(request):
 
 def sign_up(request):
     if request.method == 'POST':
+        if not Workflow.objects.all().count():
+            form = SignUpForm()
+            return render(request, 'workflow/sign_up.html',
+                          {'error': True, 'form': form, 'messages':
+                              ['There is no Workflow in database',
+                               'Please, create at least one']})
         try:
             api_id = '{}{}'.format(request.POST.get('email').split('@', 1)[0], datetime.today().date())
             rater = Rater(api_id=api_id, workflow=Workflow.objects.order_by('?').first())

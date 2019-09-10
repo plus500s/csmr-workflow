@@ -33,7 +33,7 @@
         </div>
     {% endif %}
 {% endblock %}
-{% block content %}
+{% block main_page %}
     {% if not rater %}
         <h3>If you are not registered, please <a href="{% url 'sign_up' %}">sign up</a></h3>
         <h3>If you are registered, but not signed in, please <a href="{% url 'sign_in' %}">sign in</a></h3>
@@ -42,9 +42,9 @@
         {% if all_items and used_items %}
             {% if all_items != used_items %}
                 <h3>You have done {{ used_items }} of {{ all_items }} items.</h3>
-                <h3>To continue with new item, please visit <a href="{% url 'workflow_form' %}">workflow page</a>.
+                <h3>To continue with a new item, please visit the <a href="{% url 'workflow_form' %}">workflow page</a>.
                 </h3>
-                <h3>Or return to previous item on <a href="{% url 'previous_item' %}">previous item workflow
+                <h3>Or you can return to your last item on the <a href="{% url 'previous_item' %}">previous workflow
                     page</a>.</h3>
             {% endif %}
             {% if all_items == used_items %}
