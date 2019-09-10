@@ -22,13 +22,14 @@ services:
     build:
       dockerfile: Dockerfile-test
       context: .
-    command: bash -c "prospector && coverage run --source='.' manage.py test --noinput -v 1 && coverage report"
+    command: bash -c "prospector && coverage run --source='.' manage.py test ${TEST_ARGS} --noinput -v 1 && coverage report"
     volumes:
       - .:/app
     env_file:
       environment/local
     depends_on:
        - db
+       - firefox
   selenium-hub:
     image: selenium/hub:3.141.59-selenium
     container_name: selenium-hub

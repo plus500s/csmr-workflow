@@ -11,8 +11,7 @@ build_web:
 	docker-compose build web
 
 run_tests:
-	docker-compose up -d firefox
-	docker-compose up --build tests
+	@sh -c "export TEST_ARGS=$(args) && docker-compose up --build tests"
 	docker-compose stop firefox
 	docker-compose stop selenium-hub
 
@@ -26,4 +25,4 @@ add_fixtures:
 
 run_selenium:
 	docker-compose up -d db
-	tests/selenium/explicit_run.sh
+	tests/selenium/explicit_run.sh $(args)
