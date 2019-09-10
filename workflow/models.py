@@ -23,7 +23,7 @@ class Rater(models.Model):
     age = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
+    workflow = models.ForeignKey('Workflow', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return '{} workflow:{}'.format(self.api_id, self.workflow)
@@ -49,9 +49,9 @@ class ItemWorkflow(models.Model):
 
 
 class Answer(models.Model):
-    rater = models.ForeignKey('Rater', on_delete=models.CASCADE)
-    item = models.ForeignKey('Item', on_delete=models.CASCADE)
-    workflow = models.ForeignKey('Workflow', on_delete=models.CASCADE)
+    rater = models.ForeignKey('Rater', null=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey('Item', null=True, on_delete=models.SET_NULL)
+    workflow = models.ForeignKey('Workflow', null=True,  on_delete=models.SET_NULL)
     answer_start = models.DateTimeField()
     answer_end = models.DateTimeField()
     rater_answer_evidence = models.TextField(blank=True, null=True)

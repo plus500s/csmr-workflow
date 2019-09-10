@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import widgets
 from django.utils.safestring import mark_safe
 
 
@@ -43,4 +44,47 @@ class ModelInitialTextWidget(forms.TextInput):
         html = """
         <p>{}</p>
         """.format(value)
+        return mark_safe(html)
+
+
+class EvidenceUrlChoicesWidget(widgets.ChoiceWidget):
+    input_type = 'radio'
+    template_name = 'django/forms/widgets/radio.html'
+    option_template_name = 'django/forms/widgets/radio_option.html'
+
+    def render(self, name, value, attrs=None, renderer=None):  # noqa: too-many-locals
+        """Render the widget as an HTML string."""
+        context = self.get_context(name, value, attrs)
+        default_value = context.get('widget').get('value')[0]
+        start_html = f"""
+        <div id="div_id_{name}" class="form-group" value={default_value}>
+        <div class="">
+        """
+        finish_html = """</div>
+        </div>
+        """
+        html = start_html
+        if context.get('widget').get('optgroups'):
+            for choice in context.get('widget').get('optgroups'):
+                subgroup = choice[1][0]
+                index = int(subgroup.get('index')) + 1
+                name = subgroup.get('name')
+                value = subgroup.get('value')
+                is_checked = ''
+                if default_value and value == default_value:
+                    is_checked = 'checked="checked"'
+                label = f'URL{index}'
+                a_href_tag = f'<a target="_blank" href="{value}">{label}</a>'
+                if not value:
+                    value = 'None'
+                    label = subgroup.get('label')
+                    a_href_tag = f'{label}'
+                    if not default_value:
+                        is_checked = 'checked="checked"'
+                html += f"""<div class="form-check"><label for="id_id_{name}_0_{index}" class="form-check-label">
+                <input type="radio" class="form-check-input" name="{name}" {is_checked} id="id_id_{name}_0_{index}"
+                value="{value}">
+                {a_href_tag}
+                </label></div>"""
+        html += finish_html
         return mark_safe(html)
