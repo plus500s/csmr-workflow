@@ -30,12 +30,11 @@ class Rater(models.Model):
 
 
 class Item(models.Model):
-    api_id = models.PositiveIntegerField(unique=True)
     url = models.URLField()
-    category = models.CharField(max_length=255)
+    category = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return '{} url:{}'.format(self.api_id, self.url)
+        return '{} url:{}'.format(self.pk, self.url)
 
 
 class ItemWorkflow(models.Model):

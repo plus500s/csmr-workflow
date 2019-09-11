@@ -12,7 +12,7 @@ SIGN_UP_XPATH = '//h3/a[contains(., "sign up")]'
 class MainPageTest(SeleniumBaseRemoteTest):
 
     def test_without_login(self):
-        Item.objects.create(id=1, api_id=1, url='www.test.com', category='test_category')
+        Item.objects.create(url='www.test.com', category='test_category')
         for x in range(1, 5):
             workflow = Workflow.objects.create(
                 api_id=x,
@@ -49,7 +49,7 @@ class MainPageTest(SeleniumBaseRemoteTest):
                 selenium.find_elements_by_id(WORKFLOW_PAGE_XPATH)
 
     def test_with_login(self):
-        Item.objects.create(id=1, api_id=1, url='www.test.com', category='test_category')
+        Item.objects.create(id=1, url='www.test.com', category='test_category')
         for x in range(1, 5):
             workflow = Workflow.objects.create(
                 api_id=x,

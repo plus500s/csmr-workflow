@@ -15,8 +15,8 @@ SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 
 class PreviousItemTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        previous_item = Item.objects.create(id=1, api_id=1, url='www.test.com', category='test_category1')
-        next_item = Item.objects.create(id=2, api_id=2, url='www.testtest.com', category='test_category2')
+        previous_item = Item.objects.create(url='www.test.com', category='test_category1')
+        next_item = Item.objects.create(url='www.testtest.com', category='test_category2')
 
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -93,5 +93,5 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_b, '20')
         self.assertEqual(answer.rater_answer_predict_c, '10')
         self.assertEqual(answer.rater.api_id, '1')
-        self.assertEqual(answer.item.id, 1)
+        self.assertEqual(answer.item, previous_item)
         self.assertEqual(answer.rater_answer_judgment, 'True')

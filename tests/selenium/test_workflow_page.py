@@ -14,7 +14,7 @@ WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning alert-dismissible fade
 class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(id=10, api_id=10, url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category')
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
