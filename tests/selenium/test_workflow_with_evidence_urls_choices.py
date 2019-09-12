@@ -21,7 +21,7 @@ SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 class JudgmentRegisterTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -101,7 +101,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
 
 class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -183,7 +183,7 @@ class JudgmentNoneEvidenceChoiceTest(SeleniumBaseRemoteTest):
 class JudgmentWithAlreadyDoneWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -243,7 +243,7 @@ class JudgmentWithAlreadyDoneWorkflowTest(SeleniumBaseRemoteTest):
 
 class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -317,7 +317,7 @@ class JudgmentWithoutJudgmentTest(SeleniumBaseRemoteTest):
 
 class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -384,7 +384,7 @@ class JudgmentWithoutPredictionTest(SeleniumBaseRemoteTest):
 
 class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -460,7 +460,7 @@ class JudgmentWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
 class JudgmentWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -528,7 +528,7 @@ class JudgmentWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
 class JudgmentWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(

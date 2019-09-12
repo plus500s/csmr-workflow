@@ -16,15 +16,22 @@ class Command(BaseCommand):
         try:
             with open(file_path, 'r') as f:
                 reader = csv.reader(f)
-                item_list = list(reader)
-                for item_row in item_list:
-                    for item in item_row:
+                url_list = list(reader)
+                affected_items_pks = []
+                for url_row in url_list:
+                    for url in url_row:
                         try:
-                            Item.objects.get_or_create(
-                                url=item
+                            item, created = Item.objects.get_or_create(
+                                url=url
                             )
+                            item.save()
+                            affected_items_pks.append(item.pk)
+                            if created:
+                                self.stdout.write("Created new item with url %s" % url)
                         except Item.MultipleObjectsReturned:
-                            self.stdout.write("In database there are clones with url %s" % item)
+                            self.stdout.write("In database there are clones with url %s" % url)
                             continue
+                if affected_items_pks:
+                    Item.objects.exclude(pk__in=affected_items_pks).update(is_active=False)
         except FileNotFoundError:
             raise CommandError('Cannot find file "%s"' % file_path)

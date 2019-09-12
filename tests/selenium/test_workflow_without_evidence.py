@@ -21,7 +21,7 @@ SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 class WorkflowRegisterTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         for x in range(1, 5):
             workflow = Workflow.objects.create(
                 api_id=x,
@@ -80,7 +80,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
 class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        Item.objects.create(url='www.test.com', category='test_category')
+        Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(2, 6):
             workflow = Workflow.objects.create(
@@ -132,7 +132,7 @@ class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
 class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        Item.objects.create(url='www.test.com', category='test_category')
+        Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(2, 6):
             workflow = Workflow.objects.create(
@@ -177,7 +177,7 @@ class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
 class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        Item.objects.create(url='www.test.com', category='test_category')
+        Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(2, 6):
             workflow = Workflow.objects.create(
@@ -230,7 +230,7 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
 class WorkflowWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(
@@ -278,7 +278,7 @@ class WorkflowWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
 class WorkflowWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
-        item = Item.objects.create(url='www.test.com', category='test_category')
+        item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
         for x in range(1, 5):
             workflow = Workflow.objects.create(

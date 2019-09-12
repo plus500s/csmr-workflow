@@ -19,8 +19,9 @@ def main_view(request):
     if rater_id:
         try:
             rater = Rater.objects.get(api_id=rater_id)
-            all_items = Item.objects.all().count()
-            used_items = len({answer.item_id for answer in Answer.objects.filter(rater=rater)})
+            all_items = Item.objects.filter(is_active=True).count()
+            used_items = len({answer.item_id for answer in Answer.objects.filter(
+                rater=rater) if answer.item.is_active is True})
             return render(request, 'workflow/main.html', {
                 'rater': rater_id,
                 'all_items': all_items,
@@ -142,13 +143,14 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 item = last_answer.item
         if not previous_url:
             used_items_for_user_ids = {answer.item_id for answer in Answer.objects.filter(rater=rater)}
-            items_without_answers_for_user = Item.objects.exclude(id__in=used_items_for_user_ids)
+            items_without_answers_for_user = Item.objects.filter(
+                is_active=True).exclude(id__in=used_items_for_user_ids)
             if items_without_answers_for_user:
                 item = items_without_answers_for_user[0]
         return {'item': item, 'last_answer': last_answer}
 
     def get_all_items_and_used_items(rater):
-        all_items = Item.objects.all().count()
+        all_items = Item.objects.filter(is_active=True).count()
         used_items = len({answer.item_id for answer in Answer.objects.filter(rater=rater)})
         return {'all_items': all_items, 'used_items': used_items}
 

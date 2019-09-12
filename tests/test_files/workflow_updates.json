@@ -1,0 +1,23 @@
+[
+  {
+    "name": "workflow1",
+    "instruction": "instruction1 from file",
+    "judgment": "judgment1 from file",
+    "prediction": "prediction1 from file",
+    "corroborating_question": null
+  },
+  {
+    "name": "workflow2",
+    "instruction": "instruction2 from file",
+    "judgment": "judgment2 from file",
+    "prediction": "prediction2 from file",
+    "corroborating_question": "corroborating2 from file"
+  },
+  {
+    "name": "workflow3",
+    "instruction": "instruction3 from file",
+    "judgment": "judgment3 from file",
+    "prediction": "prediction3 from file",
+    "corroborating_question": "corroborating3 from file"
+  }
+]

@@ -17,7 +17,7 @@ class ReadItemsFromCsvTest(TestCase):
         self.assertEqual(Item.objects.all().count(), 4)
 
 
-class ReadItemsFromCsvFailedTest(TestCase):
+class ReadItemsFromUnExistedCsvTest(TestCase):
     def test_unexisted_file(self):
         self.assertEqual(Item.objects.all().count(), 0)
         with self.assertRaises(CommandError):
@@ -25,7 +25,7 @@ class ReadItemsFromCsvFailedTest(TestCase):
         self.assertEqual(Item.objects.all().count(), 0)
 
 
-class RepeatingReadItemsFromCsvTest(TestCase):
+class RepeatingReadingItemsFromCsvTest(TestCase):
     def test_created_all_items_from_file(self):
         self.assertEqual(Item.objects.all().count(), 0)
         call_command('read_items_from_csv', 'tests/test_files/items.csv')
