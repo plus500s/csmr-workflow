@@ -90,7 +90,6 @@
     "model": "workflow.item",
     "pk": 1,
     "fields": {
-      "api_id": 1,
       "url": "https://azcapitoltimes.com",
       "category": "category1"
     }
@@ -99,7 +98,6 @@
     "model": "workflow.item",
     "pk": 2,
     "fields": {
-      "api_id": 2,
       "url": "https://www.i24news.tv",
       "category": "category2"
     }
@@ -108,7 +106,6 @@
     "model": "workflow.item",
     "pk": 3,
     "fields": {
-      "api_id": 3,
       "url": "https://nypost.com",
       "category": "category3"
     }

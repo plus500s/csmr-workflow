@@ -15,8 +15,8 @@ SIGN_IN_XPATH = '//h1[@class="mt-2"]'
 
 class PreviousItemTest(SeleniumBaseRemoteTest):
     def test_answer(self):
-        previous_item = Item.objects.create(url='www.test.com', category='test_category1')
-        next_item = Item.objects.create(url='www.testtest.com', category='test_category2')
+        previous_item = Item.objects.create(url='www.test.com', category='test_category1', is_active=True)
+        next_item = Item.objects.create(url='www.testtest.com', category='test_category2', is_active=True)
 
         for x in range(1, 5):
             workflow = Workflow.objects.create(

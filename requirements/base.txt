@@ -7,4 +7,3 @@ django-debug-toolbar==2.0
 celery==4.3.0
 flower==0.9.3
 django-extended-choices==1.3.3
-django-range-slider==0.2.4

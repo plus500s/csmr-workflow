@@ -32,6 +32,8 @@ class Rater(models.Model):
 class Item(models.Model):
     url = models.URLField()
     category = models.CharField(max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return '{} url:{}'.format(self.pk, self.url)
