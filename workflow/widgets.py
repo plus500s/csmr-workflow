@@ -78,7 +78,7 @@ class EvidenceUrlChoicesWidget(widgets.ChoiceWidget):
                 if not value:
                     value = 'None'
                     label = subgroup.get('label')
-                    a_href_tag = f'{label}'
+                    a_href_tag = label
                     if not default_value:
                         is_checked = 'checked="checked"'
                 html += f"""<div class="form-check"><label for="id_id_{name}_0_{index}" class="form-check-label">
