@@ -6,9 +6,9 @@ EVIDENCE_CHOICES = (
     ('False', 'No'),
 )
 JUDGMENT_CHOICES = (
-    ('True', 'Yes'),
-    ('False', 'No'),
-    ('Im not sure', 'I\'m not sure. I would need more evidence to form a judgment'),
+    ('True', 'Yes, confirms.'),
+    ('False', 'Yes, contradicts.'),
+    ('Im not sure', 'No evidence found.'),
 )
 
 WORKFLOW_TYPE_CHOICES = Choices(
