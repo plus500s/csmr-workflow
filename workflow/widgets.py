@@ -30,8 +30,8 @@ class UrlItemWidget(forms.TextInput):
     def render(self, name, value, attrs=None, renderer=None):
         value_url = value
         html = """
-        <h4><a target="_blank" href="{}">{}</a></h4>
-        """.format(value_url, value)
+        <h4><a target="_blank" href="{}">URL to verify</a></h4>
+        """.format(value_url)
         return mark_safe(html)
 
 
