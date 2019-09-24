@@ -15,9 +15,9 @@ class RangeSlider(forms.TextInput):
         input_id = 'id_{}'.format(name)
         value = value if value else '0'
         html = """
-        <input type="range" step="5" id="{}" name="{}" value="{}" data-rangeslider>
+        <input type="range" step="5" id="{}" name="{}" value="{}" data-rangeslider class='input-slider'>
         <br>
-        <h5><strong><output></output>%</strong></h5>
+        <h5><strong><output class="output-slider"></output>%</strong></h5>
         """.format(input_id, name, value)
         return mark_safe(html)
 

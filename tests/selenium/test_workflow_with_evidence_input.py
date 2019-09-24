@@ -289,9 +289,9 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
             predict_a=rater_answer_predict_a,
             predict_b=rater_answer_predict_b,
             predict_c=rater_answer_predict_c,
-            key_a=100,
-            key_b=100,
-            key_c=100)
+            key_a=10,
+            key_b=10,
+            key_c=10)
 
         submit.click()
         alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
