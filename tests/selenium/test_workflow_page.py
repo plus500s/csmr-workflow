@@ -63,9 +63,7 @@ class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
         selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
-        print(selenium.page_source)
         alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
-        print(alerts)
         self.assertEqual(alerts, INVALID_WORKFLOW_ALERTS)
         with self.assertRaises(NoSuchElementException):
             selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')

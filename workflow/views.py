@@ -151,7 +151,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
 
     def get_all_items_and_used_items(rater):
         all_items = Item.objects.filter(is_active=True).count()
-        used_items = len({answer.item_id for answer in Answer.objects.filter(rater=rater)})
+        used_items = len({answer.item for answer in Answer.objects.filter(rater=rater, item__is_active=True)})
+
         return {'all_items': all_items, 'used_items': used_items}
 
     all_items = get_all_items_and_used_items(rater).get('all_items')
