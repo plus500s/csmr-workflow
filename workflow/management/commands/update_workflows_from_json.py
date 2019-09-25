@@ -20,6 +20,7 @@ class Command(BaseCommand):
                     name = workflow_update.get('name')
                     instruction = workflow_update.get('instruction')
                     judgment = workflow_update.get('judgment')
+                    judgment_additional = workflow_update.get('judgment_additional')
                     prediction = workflow_update.get('prediction')
                     corroborating_question = workflow_update.get('corroborating_question')
 
@@ -33,6 +34,8 @@ class Command(BaseCommand):
                             workflow_to_update.prediction = prediction
                         if corroborating_question:
                             workflow_to_update.corroborating_question = corroborating_question
+                        if judgment_additional:
+                            workflow_to_update.judgment_additional = judgment_additional
                         workflow_to_update.save()
                         self.stdout.write("Successfully updated Workflow instance with name %s" % name)
                     except Workflow.DoesNotExist:

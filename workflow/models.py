@@ -8,6 +8,7 @@ class Workflow(models.Model):
     name = models.CharField(max_length=255)
     instruction = models.TextField()
     judgment = models.TextField()
+    judgment_additional = models.TextField(null=True, blank=True)
     prediction = models.TextField()
     corroborating_question = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=255, choices=WORKFLOW_TYPE_CHOICES,
@@ -57,6 +58,7 @@ class Answer(models.Model):
     answer_end = models.DateTimeField()
     rater_answer_evidence = models.TextField(blank=True, null=True)
     rater_answer_judgment = models.TextField(blank=True, null=True)
+    judgment_additional_information = models.TextField(blank=True, null=True)
     rater_answer_predict_a = models.TextField(blank=True, null=True)
     rater_answer_predict_b = models.TextField(blank=True, null=True)
     rater_answer_predict_c = models.TextField(blank=True, null=True)

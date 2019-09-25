@@ -52,6 +52,13 @@ class BaseWorkflowForm(Form):
         label='',
         choices=JUDGMENT_CHOICES,
         widget=forms.RadioSelect)
+    judgment_additional = ModelInitialTextAreaField(
+        disabled=True,
+        required=False)
+    judgment_additional_information = forms.CharField(
+        label='',
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 2}))
     prediction_question = ModelInitialTextAreaField(
         label='<h3><strong>Prediction question:</strong></h3>',
         disabled=True,
@@ -97,7 +104,8 @@ class EvidenceInputWorkflowForm(BaseWorkflowForm):
         required=False)
 
     field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',
-                   'judgment_question', 'rater_answer_judgment', 'prediction_question', 'rater_answer_predict_a',
+                   'judgment_question', 'rater_answer_judgment', 'judgment_additional',
+                   'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
                    'rater_answer_predict_b', 'rater_answer_predict_c']
 
 
@@ -117,6 +125,6 @@ class JudgmentForm(BaseWorkflowForm):
             disabled=True,
             required=False)
         self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
-                           'judgment_question', 'rater_answer_judgment', 'prediction_question',
-                           'rater_answer_predict_a',
+                           'judgment_question',  'rater_answer_judgment', 'judgment_additional',
+                           'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
                            'rater_answer_predict_b', 'rater_answer_predict_c'])
