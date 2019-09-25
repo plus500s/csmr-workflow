@@ -44,6 +44,7 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
             answer_end=answer_end,
             rater_answer_evidence='True',
             rater_answer_judgment='True',
+            judgment_additional_information='Some additional test info',
             rater_answer_predict_a='10',
             rater_answer_predict_b='20',
             rater_answer_predict_c='70',
@@ -59,6 +60,7 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
 
         rater_answer_judgment_true = selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
         rater_answer_judgment_false = selenium.find_element_by_id('id_id_rater_answer_judgment_0_2')
+        judgment_additional_information = selenium.find_element_by_id('id_judgment_additional_information')
         rater_answer_predict_a = selenium.find_element_by_id('id_rater_answer_predict_a')
         rater_answer_predict_b = selenium.find_element_by_id('id_rater_answer_predict_b')
         rater_answer_predict_c = selenium.find_element_by_id('id_rater_answer_predict_c')
@@ -66,10 +68,13 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
 
         self.assertEqual(rater_answer_judgment_true.is_selected(), True)
         self.assertEqual(rater_answer_judgment_false.is_selected(), False)
+        self.assertEqual(judgment_additional_information.get_attribute('value'), 'Some additional test info')
         self.assertEqual(rater_answer_predict_a.get_attribute('value'), '10')
         self.assertEqual(rater_answer_predict_b.get_attribute('value'), '20')
         self.assertEqual(rater_answer_predict_c.get_attribute('value'), '70')
 
+        judgment_additional_information.clear()
+        judgment_additional_information.send_keys('New additional judgment info')
         set_predict_keys_to_zero(
             predict_a=rater_answer_predict_a,
             predict_b=rater_answer_predict_b,
@@ -89,6 +94,7 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
         submit.click()
         self.assertEqual(Answer.objects.all().count(), 1)
         answer = Answer.objects.get(rater=rater, item=previous_item, workflow=workflow)
+        self.assertEqual(answer.judgment_additional_information, 'New additional judgment info')
         self.assertEqual(answer.rater_answer_predict_a, '70')
         self.assertEqual(answer.rater_answer_predict_b, '20')
         self.assertEqual(answer.rater_answer_predict_c, '10')

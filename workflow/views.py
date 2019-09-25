@@ -199,12 +199,14 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'instruction': workflow.instruction,
             'corroborating_question': workflow.corroborating_question,
             'judgment_question': workflow.judgment,
+            'judgment_additional': workflow.judgment_additional,
             'prediction_question': workflow.prediction,
         }
         if last_answer and previous_url:
             initial['evidence_url'] = last_answer.evidence_url
             initial['rater_answer_evidence'] = last_answer.rater_answer_evidence
             initial['rater_answer_judgment'] = last_answer.rater_answer_judgment
+            initial['judgment_additional_information'] = last_answer.judgment_additional_information
             initial['rater_answer_predict_a'] = last_answer.rater_answer_predict_a
             initial['rater_answer_predict_b'] = last_answer.rater_answer_predict_b
             initial['rater_answer_predict_c'] = last_answer.rater_answer_predict_c
@@ -291,6 +293,7 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             answer_end = datetime.now()
             rater_answer_evidence = request.POST.get('rater_answer_evidence')
             rater_answer_judgment = request.POST.get('rater_answer_judgment')
+            judgment_additional_information = request.POST.get('judgment_additional_information')
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
@@ -323,6 +326,7 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                     defaults={
                         'answer_start': answer_start,
                         'answer_end': answer_end,
+                        'judgment_additional_information': judgment_additional_information,
                         'rater_answer_evidence': rater_answer_evidence,
                         'rater_answer_judgment': rater_answer_judgment,
                         'rater_answer_predict_a': rater_answer_predict_a,
@@ -334,6 +338,7 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 new_answer.answer_end = answer_end
                 new_answer.rater_answer_evidence = rater_answer_evidence
                 new_answer.rater_answer_judgment = rater_answer_judgment
+                new_answer.judgment_additional_information = judgment_additional_information
                 new_answer.rater_answer_predict_a = rater_answer_predict_a
                 new_answer.rater_answer_predict_b = rater_answer_predict_b
                 new_answer.rater_answer_predict_c = rater_answer_predict_c

@@ -67,6 +67,8 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
                              'secure': False, 'path': '/'})
         selenium.get(f'{self.live_server_url}/workflow_form')
         rater_answer_judgment = selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
+        judgment_additional_information = selenium.find_element_by_id('id_judgment_additional_information')
+
         rater_answer_evidence = selenium.find_element_by_id('id_id_evidence_url_0_1')
         rater_answer_predict_a = selenium.find_element_by_id('id_rater_answer_predict_a')
         rater_answer_predict_b = selenium.find_element_by_id('id_rater_answer_predict_b')
@@ -76,7 +78,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
 
         rater_answer_evidence.click()
         rater_answer_judgment.click()
-
+        judgment_additional_information.send_keys('Judgment additional info')
         send_predict_keys(
                         predict_a=rater_answer_predict_a,
                         predict_b=rater_answer_predict_b,
@@ -93,6 +95,7 @@ class JudgmentRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_a, '10')
         self.assertEqual(answer.rater_answer_predict_b, '30')
         self.assertEqual(answer.rater_answer_predict_c, '60')
+        self.assertEqual(answer.judgment_additional_information, 'Judgment additional info')
         self.assertEqual(answer.rater.api_id, 'test_judgment1')
         self.assertEqual(answer.item, item)
         self.assertEqual(answer.rater_answer_judgment, 'True')

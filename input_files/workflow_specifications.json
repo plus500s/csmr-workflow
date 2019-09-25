@@ -3,6 +3,7 @@
     "name": "without evidence url workflow",
     "instruction": "Open the item and examine it. Then we'll ask you to make a judgment about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect users from seeing the item by accident. We will also ask you to predict what judgments others will make.",
     "judgment": "In your personal opinion should search engines and social media platforms take action to protect people from seeing this item by accident? Note: \"by accident\" means that the person did not specially look for this item. \"take action to protect\" means that Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.",
+    "judgment_additional": "Provide additional information to explain your selection:",
     "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" or \"No\" or \"Not sure\"? Keep dragging sliders until the total for all three answers adds up to 100%.\n",
     "corroborating_question": null
   },
@@ -10,6 +11,7 @@
     "name": "evidence url input workflow",
     "instruction": "Open the item and examine it. Then, do a search to find any evidence corroborating or challenging the main points in it. After you've examined the evidence we'll ask you to make a judgment about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect users from seeing the item by accident. We will also ask you to predict what judgments others will make.\n\n",
     "judgment": "In your personal opinion, taking into account of any evidence you found, should search engines and social media platforms take action to protect people from seeing this item by accident? Note: \"by accident\" means that the person did not specially look for this item. \"take action to protect\" means that Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.\n",
+    "judgment_additional": "Provide additional information to explain your selection:",
     "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" or \"No\" or \"Not sure\"? Keep dragging sliders until the total for all three answers adds up to 100%.\n",
     "corroborating_question": "Were you able to find any evidence confirming or contradicting claims in the item?"
   },
@@ -17,6 +19,7 @@
     "name": "evidence urls judgment workflow",
     "instruction": "Open the item and examine it. Then, do a search to find any evidence corroborating or challenging the main points in it. After you've examined the evidence we'll ask you to make a judgment about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect users from seeing the item by accident. We will also ask you to predict what judgments others will make.",
     "judgment": "In your personal opinion, taking into account of any evidence you found, should search engines and social media platforms take action to protect people from seeing this item by accident? Note: \"by accident\" means that the person did not specially look for this item. \"take action to protect\" means that Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.",
+    "judgment_additional": "Provide additional information to explain your selection:",
     "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" or \"No\" or \"Not sure\"? Keep dragging sliders until the total for all three answers adds up to 100%.",
     "corroborating_question": "Which of the following URLs provides the most compelling evidence confirming or contradicting claims in the current item?"
   }
