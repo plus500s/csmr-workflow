@@ -52,6 +52,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         rater_answer_evidence_url = selenium.find_element_by_id('id_evidence_url')
 
         rater_answer_judgment = selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
+        judgment_additional_information = selenium.find_element_by_id('id_judgment_additional_information')
         rater_answer_predict_a = selenium.find_element_by_id('id_rater_answer_predict_a')
         rater_answer_predict_b = selenium.find_element_by_id('id_rater_answer_predict_b')
         rater_answer_predict_c = selenium.find_element_by_id('id_rater_answer_predict_c')
@@ -61,6 +62,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         rater_answer_evidence.click()
         rater_answer_judgment.click()
         rater_answer_evidence_url.send_keys('https://test.com')
+        judgment_additional_information.send_keys('Judgment additional info')
         send_predict_keys(
             predict_a=rater_answer_predict_a,
             predict_b=rater_answer_predict_b,
@@ -77,6 +79,7 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         self.assertEqual(answer.rater_answer_predict_a, '20')
         self.assertEqual(answer.rater_answer_predict_b, '30')
         self.assertEqual(answer.rater_answer_predict_c, '50')
+        self.assertEqual(answer.judgment_additional_information, 'Judgment additional info')
         self.assertEqual(answer.rater.api_id, '1')
         self.assertEqual(answer.item, item)
         self.assertEqual(answer.rater_answer_judgment, 'True')
@@ -289,9 +292,9 @@ class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
             predict_a=rater_answer_predict_a,
             predict_b=rater_answer_predict_b,
             predict_c=rater_answer_predict_c,
-            key_a=100,
-            key_b=100,
-            key_c=100)
+            key_a=10,
+            key_b=10,
+            key_c=10)
 
         submit.click()
         alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
