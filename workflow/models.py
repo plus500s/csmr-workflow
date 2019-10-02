@@ -19,11 +19,16 @@ class Workflow(models.Model):
 
 
 class Rater(models.Model):
-    api_id = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True, null=True)
-    age = models.CharField(max_length=255)
-    gender = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
+    api_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    worker_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    rejected_state = models.BooleanField(default=False)
+    completed_register_state = models.BooleanField(default=False)
+    completed_demographics_state = models.BooleanField(default=False)
+    completed_label = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    age = models.CharField(max_length=255, blank=True, null=True)
+    gender = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
     workflow = models.ForeignKey('Workflow', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -66,3 +71,13 @@ class Answer(models.Model):
 
     def __str__(self):
         return 'rater:{} item:{} workflow:{}'.format(self.rater, self.item, self.workflow)
+
+
+class Assignment(models.Model):
+    assignment_id = models.CharField(max_length=255, unique=True)
+    hit_id = models.CharField(max_length=255)
+    rater = models.ForeignKey(Rater, on_delete=models.SET_NULL, null=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return 'assignment:{} hit:{} rater:{}'.format(self.assignment_id, self.hit_id, self.rater)

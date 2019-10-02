@@ -29,3 +29,6 @@ create_hits:
 run_selenium:
 	docker-compose up -d db
 	tests/selenium/explicit_run.sh $(args)
+
+make_migrations:
+	docker-compose exec web python manage.py makemigrations
