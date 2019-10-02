@@ -1,0 +1,62 @@
+{
+  "register": {
+      "configuration": {
+      "Title": "TitleOne",
+      "Description": "Description",
+      "Keywords": "text, quick, labeling",
+      "Reward": "0.0",
+      "MaxAssignments": 1,
+      "LifetimeInSeconds": 172800,
+      "AssignmentDurationInSeconds": 600,
+      "AutoApprovalDelayInSeconds": 14400
+    },
+    "worker_requirements": [{
+      "QualificationTypeId": "000000000000000000L0",
+      "Comparator": "GreaterThanOrEqualTo",
+      "IntegerValues": [
+        80
+      ],
+      "RequiredToPreview": true
+    }]
+    },
+  "demographics": {
+    "configuration": {
+    "Title": "TitleTwo",
+    "Description": "Description",
+    "Keywords": "text, quick, labeling",
+    "Reward": "0.0",
+    "MaxAssignments": 1,
+    "LifetimeInSeconds": 172800,
+    "AssignmentDurationInSeconds": 600,
+    "AutoApprovalDelayInSeconds": 14400
+  },
+  "worker_requirements": [{
+    "QualificationTypeId": "000000000000000000L0",
+    "Comparator": "GreaterThanOrEqualTo",
+    "IntegerValues": [
+      80
+    ],
+    "RequiredToPreview": true
+  }]
+  },
+  "label": {
+    "configuration": {
+    "Title": "TitleThree",
+    "Description": "Description",
+    "Keywords": "text, quick, labeling",
+    "Reward": "0.0",
+    "MaxAssignments": 1,
+    "LifetimeInSeconds": 172800,
+    "AssignmentDurationInSeconds": 600,
+    "AutoApprovalDelayInSeconds": 14400
+  },
+  "worker_requirements": [{
+    "QualificationTypeId": "000000000000000000L0",
+    "Comparator": "GreaterThanOrEqualTo",
+    "IntegerValues": [
+      80
+    ],
+    "RequiredToPreview": true
+  }]
+  }
+}

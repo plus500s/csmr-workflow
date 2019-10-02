@@ -32,3 +32,7 @@ Using Makefile
 * to run selenium tests explicit **required firefox 42** (if you want run specific test run **make run_selenium args=tests.selenium.test_auth)**::
 
     $ make run_selenium
+
+* to create HITs for Amazon MTurk::
+
+    $ make create_hits
