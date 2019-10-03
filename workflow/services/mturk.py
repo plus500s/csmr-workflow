@@ -12,7 +12,7 @@ QUESTION_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 </ExternalQuestion>
 """
 HITS_LIST = {
-    'register': 'https://one.com/',
+    'register': 'https://labeling.umsi.io/mturk_register',
     'demographics': 'https://two.com/',
     'label': 'https://three.com/',
 }
@@ -53,3 +53,10 @@ class MTurkConnection:
     def _load_configuration(self):
         with open(CONFIGURATION_FILE_PATH, 'r') as f:
             self.configuration = json.loads(f.read())
+
+    def accept_assignment(self, assignment_id, requester_feedback, override_rejection):
+        return self.client.approve_assignment(
+            AssignmentId=assignment_id,
+            RequesterFeedback=requester_feedback,
+            OverrideRejection=override_rejection,
+        )

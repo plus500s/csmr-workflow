@@ -1,15 +1,14 @@
 from django import forms
-from django.forms import ModelForm, Form
+from django.forms import Form
 
 from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField, EvidenceUrlChoicesField
 
 from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
-from .models import Rater
 
 TEXT_WIDTH = 'width:300px'
 
 
-class SignUpForm(ModelForm):
+class SignUpForm(Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'style': TEXT_WIDTH})
     )
@@ -22,10 +21,6 @@ class SignUpForm(ModelForm):
     location = forms.Field(
         widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
     )
-
-    class Meta:
-        model = Rater
-        fields = ['email', 'age', 'gender', 'location']
 
 
 class SignInForm(Form):
@@ -128,3 +123,15 @@ class JudgmentForm(BaseWorkflowForm):
                            'judgment_question',  'rater_answer_judgment', 'judgment_additional',
                            'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
                            'rater_answer_predict_b', 'rater_answer_predict_c'])
+
+
+class MTurkRegisterForm(Form):
+    first_question = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
+    second_question = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )
+    third_question = forms.Field(
+        widget=forms.TextInput(attrs={'style': TEXT_WIDTH})
+    )

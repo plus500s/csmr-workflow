@@ -3,13 +3,18 @@ from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.generic import TemplateView
+from boto3.exceptions import Boto3Error
 
 from .email_templates import registration_rater_template
 from .tasks import send_mail_task
-from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentForm, WithoutEvidenceWorkflowForm
-from .models import Rater, Answer, Item, Workflow, ItemWorkflow
+from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentForm, WithoutEvidenceWorkflowForm, \
+    MTurkRegisterForm
+from .models import Rater, Answer, Item, Workflow, ItemWorkflow, Assignment
 from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
+from .services.mturk import MTurkConnection
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
 
@@ -41,12 +46,16 @@ def sign_up(request):
                                'Please, create at least one']})
         try:
             api_id = '{}{}'.format(request.POST.get('email').split('@', 1)[0], datetime.today().date())
-            rater = Rater(api_id=api_id, workflow=Workflow.objects.order_by('?').first())
-            form = SignUpForm(request.POST, instance=rater)
+            form = SignUpForm(request.POST)
             if form.is_valid():
+                rater = Rater(api_id=api_id, workflow=Workflow.objects.order_by('?').first())
+                rater.age = request.POST.get('age')
+                rater.email = request.POST.get('email')
+                rater.gender = request.POST.get('gender')
+                rater.location = request.POST.get('location')
+                rater.save()
                 request.session['rater_id'] = api_id
                 rater_id = api_id
-                form.save()
 
                 subject, body = registration_rater_template
                 send_mail_task.delay(to=[form.cleaned_data['email']],
@@ -380,3 +389,68 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
 
 def previous_item(request):
     return workflow_form(request, previous_url=True)
+
+
+class MTurkRegister(TemplateView):
+    template_name = 'workflow/mturk_register.html'
+    form = MTurkRegisterForm
+    disable_header = True
+
+    @xframe_options_exempt
+    def post(self, request, **kwargs):
+        connection = self._create_connection(**kwargs)
+        if request.POST.get('first_question'):  # TODO
+            return self._post_form(request, connection, **kwargs)
+
+        return self._post_register(request, connection)
+
+    def _post_register(self, request, connection):
+        worker_id = request.POST.get('workerId')
+        hit_id = request.POST.get('hitId')
+        assignment_id = request.POST.get('assignmentId')
+        rater = Rater.objects.get_or_create(worker_id=worker_id)
+
+        if rater.rejected_state or rater.completed_register_state:
+
+            return connection.accept_assignment(assignment_id, 'deny', False)
+
+        if not rater.workflow:
+            rater.workflow = Workflow.objects.order_by('?').first()
+        rater.save()
+
+        Assignment.objects.get_or_create(
+            assignment_id=assignment_id,
+            hit_id=hit_id,
+            rater=rater,
+        )
+        request.session['worker_id'] = worker_id
+        return render(request, 'workflow/mturk_register.html', {
+            'form': self.form,
+            'disable_header': self.disable_header,
+        })
+
+    def _post_form(self, request, connection, **kwargs):
+        try:
+            rater = Rater.objects.get(worker_id=request.session.get('worker_id'))
+        except Rater.DoesNotExist:
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context, status=404)
+
+        assignment = Assignment.objects.get(rater=rater, is_active=True)
+
+        # if not self.form(request.POST).is_valid():
+        #     rater.rejected_state = True
+        #     rater.save()
+        #     return connection.accept_assignment(self, 'deny', True)  # TODO
+        rater.completed_register_state = True
+        rater.save()
+        assignment.is_active = False
+        assignment.save()
+        return connection.accept_assignment(rater.assignment_id, 'accept', True)
+
+    def _create_connection(self, **kwargs):
+        try:
+            return MTurkConnection()
+        except Boto3Error:
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context, status=500)
