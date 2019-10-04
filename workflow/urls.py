@@ -8,5 +8,5 @@ urlpatterns = [
     path('sign_up', views.sign_up, name='sign_up'),
     path('workflow_form', views.workflow_form, name='workflow_form'),
     path('previous_item', views.previous_item, name='previous_item'),
-    path('mturk_register', views.TemplateView.as_view(), name='mturk_register'),
+    path('mturk_register', views.MTurkRegister.as_view(), name='mturk_register'),
 ]

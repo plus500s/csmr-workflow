@@ -4,6 +4,7 @@ from django.db.models import F, Count
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from boto3.exceptions import Boto3Error
 
@@ -391,28 +392,30 @@ def previous_item(request):
     return workflow_form(request, previous_url=True)
 
 
+@method_decorator(xframe_options_exempt, name='dispatch')
 class MTurkRegister(TemplateView):
+    http_method_names = ['get', 'post']
     template_name = 'workflow/mturk_register.html'
     form = MTurkRegisterForm
     disable_header = True
 
-    @xframe_options_exempt
     def post(self, request, **kwargs):
         connection = self._create_connection(**kwargs)
-        if request.POST.get('first_question'):  # TODO
+        if request.POST.get('first_question'):  # TODO set to real element after form with questions will be created
             return self._post_form(request, connection, **kwargs)
 
-        return self._post_register(request, connection)
+        return self._post_register(request, connection, **kwargs)
 
-    def _post_register(self, request, connection):
+    def _post_register(self, request, connection, **kwargs):
         worker_id = request.POST.get('workerId')
         hit_id = request.POST.get('hitId')
         assignment_id = request.POST.get('assignmentId')
-        rater = Rater.objects.get_or_create(worker_id=worker_id)
-
+        rater, _ = Rater.objects.get_or_create(worker_id=worker_id)
         if rater.rejected_state or rater.completed_register_state:
 
-            return connection.accept_assignment(assignment_id, 'deny', False)
+            connection.accept_assignment(assignment_id, 'deny', False)
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context, status=200)
 
         if not rater.workflow:
             rater.workflow = Workflow.objects.order_by('?').first()
@@ -424,7 +427,7 @@ class MTurkRegister(TemplateView):
             rater=rater,
         )
         request.session['worker_id'] = worker_id
-        return render(request, 'workflow/mturk_register.html', {
+        return render(request, self.template_name, {
             'form': self.form,
             'disable_header': self.disable_header,
         })
@@ -434,15 +437,16 @@ class MTurkRegister(TemplateView):
             rater = Rater.objects.get(worker_id=request.session.get('worker_id'))
         except Rater.DoesNotExist:
             context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=404)
+            return self.render_to_response(context, status=404)  # TODO check what we need to return
 
         assignment = Assignment.objects.get(rater=rater, is_active=True)
 
         # if not self.form(request.POST).is_valid():
         #     rater.rejected_state = True
         #     rater.save()
-        #     return connection.accept_assignment(self, 'deny', True)  # TODO
+        #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
         rater.completed_register_state = True
+        rater.rejected_state = False
         rater.save()
         assignment.is_active = False
         assignment.save()
