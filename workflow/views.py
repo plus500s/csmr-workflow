@@ -6,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from boto3.exceptions import Boto3Error
 
 from .email_templates import registration_rater_template
 from .tasks import send_mail_task
@@ -15,7 +14,6 @@ from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentFor
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow, Assignment
 from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
-from .services.mturk import MTurkConnection
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
 
@@ -406,6 +404,9 @@ class MTurkRegister(TemplateView):
         worker_id = request.GET.get('workerId')
         hit_id = request.GET.get('hitId')
         assignment_id = request.GET.get('assignmentId')
+        if not worker_id:
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context, status=404)
         rater, _ = Rater.objects.get_or_create(worker_id=worker_id)
         if rater.rejected_state or rater.completed_register_state or assignment_id == "ASSIGNMENT_ID_NOT_AVAILABLE":
             context = self.get_context_data(**kwargs)
@@ -431,8 +432,16 @@ class MTurkRegister(TemplateView):
         }
         return self._return_form(request, data)
 
-    def post(self, request, **kwargs):
+    def post(self, request, **kwargs):  # noqa: too-many-locals
         if request.POST.get('first_question'):  # TODO check what we need to get from POST
+            first_question = request.POST.get('first_question')
+            second_question = request.POST.get('second_question')
+            third_question = request.POST.get('third_question')
+            initial = {
+                'first_question': first_question,
+                'second_question': second_question,
+                'third_question': third_question,
+            }
             disable_submit = True
             url = self.start_url
             worker_id = request.POST.get('workerId')
@@ -458,7 +467,7 @@ class MTurkRegister(TemplateView):
             assignment.is_active = False
             assignment.save()
             data = {
-                'form': self.form,
+                'form': self.form(initial=initial),
                 'url': url,
                 'disable_submit': disable_submit,
                 'disable_header': self.disable_header,
@@ -467,6 +476,8 @@ class MTurkRegister(TemplateView):
                 'assignment_id': assignment_id,
             }
             return self._return_form(request, data)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context, status=404)  # TODO check what we need to return
 
     def _return_form(self, request, data):
         return render(request, self.template_name, data)
