@@ -221,7 +221,12 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'item': item.url,
             'instruction': workflow.instruction,
             'corroborating_question': workflow.corroborating_question,
-            'judgment_question': workflow.judgment,
+            'judgment_enough_information': workflow.judgment_enough_information,
+            'judgment_misleading_item': workflow.judgment_misleading_item,
+            'judgment_remove_reduce_inform_head': workflow.judgment_remove_reduce_inform_head,
+            'judgment_question_remove': workflow.judgment_remove,
+            'judgment_question_reduce': workflow.judgment_reduce,
+            'judgment_question_inform': workflow.judgment_inform,
             'judgment_additional': workflow.judgment_additional,
             'prediction_question': workflow.prediction,
         }

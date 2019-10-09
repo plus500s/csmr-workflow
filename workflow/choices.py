@@ -1,14 +1,12 @@
 from extended_choices import Choices
 
-
 EVIDENCE_CHOICES = (
     ('True', 'Yes'),
     ('False', 'No'),
 )
 JUDGMENT_CHOICES = (
-    ('True', 'Yes, confirms.'),
-    ('False', 'Yes, contradicts.'),
-    ('Im not sure', 'No evidence found.'),
+    ('True', 'Yes'),
+    ('False', 'No'),
 )
 
 WORKFLOW_TYPE_CHOICES = Choices(
@@ -30,4 +28,14 @@ JUDGMENT_REDUCE_CHOICES = (
 JUDGMENT_INFORM_CHOICES = (
     ('True', 'Yes, platforms should inform users that the item may be misleading.'),
     ('False', 'No, platforms should not inform users that the item may be misleading.'),
+)
+
+JUDGMENT_MISLEADING_ITEM_CHOICES = (
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
+    ('6', '6'),
+    ('7', '7'),
 )

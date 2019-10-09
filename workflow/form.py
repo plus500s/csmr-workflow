@@ -3,7 +3,8 @@ from django.forms import Form
 
 from .fields import RangeSliderField, UrlItemField, ModelInitialTextAreaField, EvidenceUrlChoicesField
 
-from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES
+from .choices import EVIDENCE_CHOICES, JUDGMENT_CHOICES, JUDGMENT_REMOVE_CHOICES, JUDGMENT_REDUCE_CHOICES, \
+    JUDGMENT_INFORM_CHOICES, JUDGMENT_MISLEADING_ITEM_CHOICES
 
 TEXT_WIDTH = 'width:300px'
 
@@ -39,13 +40,49 @@ class BaseWorkflowForm(Form):
         label='<h3><strong>Item:</strong></h3>',
         disabled=True,
         required=False)
-    judgment_question = ModelInitialTextAreaField(
-        label='<h3><strong>Judgment question:</strong></h3>',
+    judgment_enough_information_ = ModelInitialTextAreaField(
+        label='<h3><strong>Judgment questions:</strong></h3>',
         disabled=True,
         required=False)
     rater_answer_judgment = forms.ChoiceField(
         label='',
         choices=JUDGMENT_CHOICES,
+        widget=forms.RadioSelect)
+    judgment_misleading_item = ModelInitialTextAreaField(
+        label='',
+        disabled=True,
+        required=False)
+    rater_answer_judgment_misleading_item = forms.ChoiceField(
+        label='',
+        choices=JUDGMENT_MISLEADING_ITEM_CHOICES,
+        widget=forms.RadioSelect)
+    judgment_remove_reduce_inform_head = ModelInitialTextAreaField(
+        label='',
+        disabled=True,
+        required=False)
+    judgment_question_remove = ModelInitialTextAreaField(
+        label='',
+        disabled=True,
+        required=False)
+    rater_answer_judgment_remove = forms.ChoiceField(
+        label='',
+        choices=JUDGMENT_REMOVE_CHOICES,
+        widget=forms.RadioSelect)
+    judgment_question_reduce = ModelInitialTextAreaField(
+        label='',
+        disabled=True,
+        required=False)
+    rater_answer_judgment_reduce = forms.ChoiceField(
+        label='',
+        choices=JUDGMENT_REDUCE_CHOICES,
+        widget=forms.RadioSelect)
+    judgment_question_inform = ModelInitialTextAreaField(
+        label='',
+        disabled=True,
+        required=False)
+    rater_answer_judgment_inform = forms.ChoiceField(
+        label='',
+        choices=JUDGMENT_INFORM_CHOICES,
         widget=forms.RadioSelect)
     judgment_additional = ModelInitialTextAreaField(
         disabled=True,
@@ -100,7 +137,9 @@ class EvidenceInputWorkflowForm(BaseWorkflowForm):
         required=False)
 
     field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',
-                   'judgment_question', 'rater_answer_judgment', 'judgment_additional',
+                   'judgment_enough_information', 'rater_answer_judgment',  'judgment_misleading_item',
+                   'judgment_remove_reduce_inform_head', 'rater_answer_judgment_remove',
+                   'rater_answer_judgment_reduce', 'rater_answer_judgment_inform', 'judgment_additional',
                    'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
                    'rater_answer_predict_b', 'rater_answer_predict_c']
 
@@ -121,7 +160,9 @@ class JudgmentForm(BaseWorkflowForm):
             disabled=True,
             required=False)
         self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
-                           'judgment_question',  'rater_answer_judgment', 'judgment_additional',
+                           'judgment_enough_information', 'rater_answer_judgment',  'judgment_misleading_item',
+                           'judgment_remove_reduce_inform_head', 'rater_answer_judgment_remove',
+                           'rater_answer_judgment_reduce', 'rater_answer_judgment_inform', 'judgment_additional',
                            'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
                            'rater_answer_predict_b', 'rater_answer_predict_c'])
 
