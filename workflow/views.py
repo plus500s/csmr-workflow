@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from django.db import IntegrityError
 from django.db.models import F, Count
@@ -18,6 +19,7 @@ from . import alerts
 from .services.mturk import MTurkConnection
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
+VERSION = os.getenv('VERSION', 'dev.09.10.2019.1')
 
 
 def main_view(request):
@@ -31,10 +33,11 @@ def main_view(request):
             return render(request, 'workflow/main.html', {
                 'rater': rater_id,
                 'all_items': all_items,
-                'used_items': used_items})
+                'used_items': used_items,
+                'version': VERSION})
         except ObjectDoesNotExist:
-            return render(request, 'workflow/main.html', {'rater': None})
-    return render(request, 'workflow/main.html', {'rater': rater_id})
+            return render(request, 'workflow/main.html', {'rater': None, 'version': VERSION})
+    return render(request, 'workflow/main.html', {'rater': rater_id, 'version': VERSION})
 
 
 def sign_up(request):
@@ -44,7 +47,7 @@ def sign_up(request):
             return render(request, 'workflow/sign_up.html',
                           {'error': True, 'form': form, 'messages':
                               ['There is no Workflow in database',
-                               'Please, create at least one']})
+                               'Please, create at least one'], 'version': VERSION})
         try:
             api_id = '{}{}'.format(request.POST.get('email').split('@', 1)[0], datetime.today().date())
             form = SignUpForm(request.POST)
@@ -66,19 +69,20 @@ def sign_up(request):
                 return render(request, 'workflow/main.html', {
                     'new_rater': 'done',
                     'rater': rater_id,
-                    'all_items': all_items})
+                    'all_items': all_items,
+                    'version': VERSION})
             errors = [value for value in form.errors.values()]
             form = SignUpForm()
             return render(request, 'workflow/sign_up.html',
                           {'error': True, 'form': form, 'messages':
-                              [message for message in errors]})
+                              [message for message in errors], 'version': VERSION})
         except IntegrityError:
             render(request, 'workflow/sign_up.html',
                    {'error': True, 'form': form, 'messages':
                        ['There is no Workflow in database',
-                        'Please, create at least one']})
+                        'Please, create at least one'], 'version': VERSION})
     form = SignUpForm()
-    return render(request, 'workflow/sign_up.html', {'form': form})
+    return render(request, 'workflow/sign_up.html', {'form': form, 'version': VERSION})
 
 
 def sign_in(request):
@@ -94,19 +98,21 @@ def sign_in(request):
                     'old_rater': 'done',
                     'rater': rater.api_id,
                     'all_items': all_items,
-                    'used_items': used_items})
+                    'used_items': used_items,
+                    'version': VERSION})
             except ObjectDoesNotExist:
                 return render(request, 'workflow/sign_in.html', {
                     'form': form,
                     'error': True,
-                    'messages': alerts.INVALID_USER_SIGN_IN_ALERTS})
+                    'messages': alerts.INVALID_USER_SIGN_IN_ALERTS,
+                    'version': VERSION})
         errors = [value for value in form.errors.values()]
         form = SignInForm()
         return render(request, 'workflow/sign_up.html',
                       {'error': True, 'form': form, 'messages':
-                          [message for message in errors]})
+                          [message for message in errors], 'version': VERSION})
     form = SignInForm()
-    return render(request, 'workflow/sign_in.html', {'form': form})
+    return render(request, 'workflow/sign_in.html', {'form': form, 'version': VERSION})
 
 
 def logout(request):
@@ -114,12 +120,12 @@ def logout(request):
         return render(request, 'workflow/sign_in.html', {
             'form': SignInForm(),
             'error': True,
-            'messages': ['You are not signed in our system!']})
+            'messages': ['You are not signed in our system!'], 'version': VERSION})
     if request.method == 'POST':
         request.session.pop('rater_id')
-        return render(request, 'workflow/main.html', {'logout': 'done'})
+        return render(request, 'workflow/main.html', {'logout': 'done', 'version': VERSION})
 
-    return render(request, 'workflow/logout.html')
+    return render(request, 'workflow/logout.html', {'version': VERSION})
 
 
 def workflow_form(request, previous_url=None):  # noqa: too-many-locals
@@ -128,20 +134,23 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
         return render(request, 'workflow/sign_in.html', {
             'form': SignInForm(),
             'error': True,
-            'messages': alerts.NOT_SIGNED_IN_USER_WORKFLOW_ALERTS})
+            'messages': alerts.NOT_SIGNED_IN_USER_WORKFLOW_ALERTS,
+            'version': VERSION})
     try:
         rater = Rater.objects.get(api_id=rater_id)
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
-            'messages': alerts.INVALID_USER_ALERTS})
+            'messages': alerts.INVALID_USER_ALERTS,
+            'version': VERSION})
     try:
         workflow = rater.workflow
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
             'messages': alerts.INVALID_WORKFLOW_ALERTS,
-            'rater': rater_id})
+            'rater': rater_id,
+            'version': VERSION})
 
     def get_item(rater, previous_url):
         last_answer = None
@@ -174,7 +183,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'workflow': 'done',
             'rater': rater_id,
             'all_items': all_items,
-            'used_items': used_items})
+            'used_items': used_items,
+            'version': VERSION})
 
     if not item and previous_url:
         return render(request, 'workflow/main.html', {
@@ -182,13 +192,15 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'messages': alerts.INVALID_PREVIOUS_ITEM_ALERTS,
             'rater': rater_id,
             'all_items': all_items,
-            'used_items': used_items})
+            'used_items': used_items,
+            'version': VERSION})
 
     def get_no_workflow_form():
         return render(request, 'workflow/main.html', {
             'error': True,
             'messages': alerts.INVALID_WORKFLOW_ALERTS,
-            'rater': rater_id})
+            'rater': rater_id,
+            'version': VERSION})
 
     def get_form(rater, previous_url, workflow, messages=None, error=False):
         item_last_answer = get_item(rater, previous_url)
@@ -202,7 +214,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 'workflow': 'done',
                 'rater': rater_id,
                 'all_items': all_items,
-                'used_items': used_items})
+                'used_items': used_items,
+                'version': VERSION})
         form = None
         initial = {
             'item': item.url,
@@ -245,7 +258,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                     'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
                     'rater': rater_id,
                     'all_items': all_items,
-                    'used_items': used_items})
+                    'used_items': used_items,
+                    'version': VERSION})
         if not form:
             return get_no_workflow_form()
 
@@ -259,9 +273,9 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 'messages': messages,
                 'error': error,
                 'previous_url': previous_url,
-            })
+                'version': VERSION})
         except ObjectDoesNotExist:
-            return render(request, 'workflow/main.html', {'workflow': 'done', 'rater': rater_id})
+            return render(request, 'workflow/main.html', {'workflow': 'done', 'rater': rater_id, 'version': VERSION})
 
     def post_form():  # noqa: too-many-locals
         previous_url = None
@@ -295,7 +309,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 return render(request, 'workflow/main.html', {
                     'error': True,
                     'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
-                    'rater': rater_id})
+                    'rater': rater_id,
+                    'version': VERSION})
 
         if form.is_valid():
             item = Item.objects.get(id=request.POST.get('item'))
@@ -343,6 +358,7 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                         'rater_answer_predict_b': rater_answer_predict_b,
                         'rater_answer_predict_c': rater_answer_predict_c,
                         'evidence_url': evidence_url,
+                        'version': VERSION,
                     })
                 new_answer.answer_start = answer_start
                 new_answer.answer_end = answer_end
@@ -430,6 +446,7 @@ class MTurkRegister(TemplateView):
         return render(request, self.template_name, {
             'form': self.form,
             'disable_header': self.disable_header,
+            'version': VERSION,
         })
 
     def _post_form(self, request, connection, **kwargs):
