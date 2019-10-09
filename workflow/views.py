@@ -358,7 +358,6 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                         'rater_answer_predict_b': rater_answer_predict_b,
                         'rater_answer_predict_c': rater_answer_predict_c,
                         'evidence_url': evidence_url,
-                        'version': VERSION,
                     })
                 new_answer.answer_start = answer_start
                 new_answer.answer_end = answer_end
