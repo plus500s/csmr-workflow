@@ -62,21 +62,22 @@ class BaseWorkflowForm(Form):
         max=100,
         min=0,
         step=5,
-        label='Yes',
+        label='Remove. Out of 100 respondents, how many will say the item should be removed?',
         name='rater_answer_predict_a'
     )
     rater_answer_predict_b = RangeSliderField(
         max=100,
         min=0,
         step=5,
-        label='No',
+        label='Reduce. Out of 100 respondents, how many will say the item’s audience should be reduced?',
         name='rater_answer_predict_b'
     )
     rater_answer_predict_c = RangeSliderField(
         max=100,
         min=0,
         step=5,
-        label='Not sure',
+        label='Inform. Out of 100 respondents, '
+              'how many will say that users should be informed that the item is misleading?',
         name='rater_answer_predict_c'
     )
 

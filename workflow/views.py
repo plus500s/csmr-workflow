@@ -322,27 +322,6 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
-            # check, that prediction answers are 100 in sum.
-            try:
-                prediction_sum = sum([int(rater_answer_predict_a),
-                                      int(rater_answer_predict_b),
-                                      int(rater_answer_predict_c)])
-                if prediction_sum != 100:
-                    return get_form(
-                        rater=rater,
-                        previous_url=previous_url,
-                        workflow=workflow,
-                        error=True,
-                        messages=alerts.PREDICTION_QUESTIONS_ALERTS)
-            except TypeError:
-                return get_form(
-                    rater=rater,
-                    previous_url=previous_url,
-                    workflow=workflow,
-                    error=True,
-                    messages=alerts.PREDICTION_QUESTIONS_ALERTS)
-
-            previous_url = None
             try:
                 new_answer, created = Answer.objects.get_or_create(
                     rater=rater,
