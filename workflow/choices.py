@@ -16,3 +16,18 @@ WORKFLOW_TYPE_CHOICES = Choices(
     ['EVIDENCE_URL_INPUT_WORKFLOW', 'evidence url input workflow', 'evidence url input workflow'],
     ['EVIDENCE_URLS_JUDGMENT_WORKFLOW', 'evidence urls judgment workflow', 'evidence urls judgment workflow'],
 )
+
+JUDGMENT_REMOVE_CHOICES = (
+    ('True', 'Yes, platforms should remove the item.'),
+    ('False', 'No, platforms should not remove the item.'),
+)
+
+JUDGMENT_REDUCE_CHOICES = (
+    ('True', 'Yes, platforms should reduce exposure to the item.'),
+    ('False', 'No, platforms should not reduce exposure to the item.'),
+)
+
+JUDGMENT_INFORM_CHOICES = (
+    ('True', 'Yes, platforms should inform users that the item may be misleading.'),
+    ('False', 'No, platforms should not inform users that the item may be misleading.'),
+)
