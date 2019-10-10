@@ -39,8 +39,7 @@ class TestRegister(TestCase):
             api_id=1,
             name=WORKFLOW_NAME,
             instruction=2,
-            judgment=3,
-            prediction=4,
+            prediction=3,
             type=WORKFLOW_TYPE
         )
         existed_worker = Rater.objects.create(
