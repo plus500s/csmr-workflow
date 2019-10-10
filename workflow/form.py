@@ -40,7 +40,7 @@ class BaseWorkflowForm(Form):
         label='<h3><strong>Item:</strong></h3>',
         disabled=True,
         required=False)
-    judgment_enough_information_ = ModelInitialTextAreaField(
+    judgment_enough_information = ModelInitialTextAreaField(
         label='<h3><strong>Judgment questions:</strong></h3>',
         disabled=True,
         required=False)
@@ -138,10 +138,11 @@ class EvidenceInputWorkflowForm(BaseWorkflowForm):
 
     field_order = ['instruction', 'item', 'corroborating_question', 'rater_answer_evidence', 'evidence_url',
                    'judgment_enough_information', 'rater_answer_judgment',  'judgment_misleading_item',
-                   'judgment_remove_reduce_inform_head', 'rater_answer_judgment_remove',
-                   'rater_answer_judgment_reduce', 'rater_answer_judgment_inform', 'judgment_additional',
-                   'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
-                   'rater_answer_predict_b', 'rater_answer_predict_c']
+                   'rater_answer_judgment_misleading_item', 'judgment_remove_reduce_inform_head',
+                   'judgment_question_remove', 'rater_answer_judgment_remove', 'judgment_question_reduce',
+                   'rater_answer_judgment_reduce', 'judgment_question_inform', 'rater_answer_judgment_inform',
+                   'judgment_additional', 'judgment_additional_information', 'prediction_question',
+                   'rater_answer_predict_a', 'rater_answer_predict_b', 'rater_answer_predict_c']
 
 
 class JudgmentForm(BaseWorkflowForm):
@@ -161,10 +162,11 @@ class JudgmentForm(BaseWorkflowForm):
             required=False)
         self.order_fields(['instruction', 'item', 'corroborating_question', 'evidence_url',
                            'judgment_enough_information', 'rater_answer_judgment',  'judgment_misleading_item',
-                           'judgment_remove_reduce_inform_head', 'rater_answer_judgment_remove',
-                           'rater_answer_judgment_reduce', 'rater_answer_judgment_inform', 'judgment_additional',
-                           'judgment_additional_information', 'prediction_question', 'rater_answer_predict_a',
-                           'rater_answer_predict_b', 'rater_answer_predict_c'])
+                           'rater_answer_judgment_misleading_item', 'judgment_remove_reduce_inform_head',
+                           'judgment_question_remove', 'rater_answer_judgment_remove', 'judgment_question_reduce',
+                           'rater_answer_judgment_reduce', 'judgment_question_inform', 'rater_answer_judgment_inform',
+                           'judgment_additional', 'judgment_additional_information', 'prediction_question',
+                           'rater_answer_predict_a', 'rater_answer_predict_b', 'rater_answer_predict_c'])
 
 
 class MTurkRegisterForm(Form):
