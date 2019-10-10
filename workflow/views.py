@@ -238,6 +238,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             initial['rater_answer_predict_a'] = last_answer.rater_answer_predict_a
             initial['rater_answer_predict_b'] = last_answer.rater_answer_predict_b
             initial['rater_answer_predict_c'] = last_answer.rater_answer_predict_c
+            initial['rater_answer_judgment_misleading_item'] = last_answer.rater_answer_judgment_misleading_item
+            initial['rater_answer_judgment_remove'] = last_answer.rater_answer_judgment_remove
+            initial['rater_answer_judgment_reduce'] = last_answer.rater_answer_judgment_reduce
+            initial['rater_answer_judgment_inform'] = last_answer.rater_answer_judgment_inform
 
         if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
             form = WithoutEvidenceWorkflowForm
@@ -327,6 +331,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
+            rater_answer_judgment_misleading_item = request.POST.get('rater_answer_judgment_misleading_item')
+            rater_answer_judgment_remove = request.POST.get('rater_answer_judgment_remove')
+            rater_answer_judgment_reduce = request.POST.get('rater_answer_judgment_reduce')
+            rater_answer_judgment_inform = request.POST.get('rater_answer_judgment_inform')
             try:
                 new_answer, created = Answer.objects.get_or_create(
                     rater=rater,
@@ -342,6 +350,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                         'rater_answer_predict_b': rater_answer_predict_b,
                         'rater_answer_predict_c': rater_answer_predict_c,
                         'evidence_url': evidence_url,
+                        'rater_answer_judgment_misleading_item': rater_answer_judgment_misleading_item,
+                        'rater_answer_judgment_remove': rater_answer_judgment_remove,
+                        'rater_answer_judgment_reduce': rater_answer_judgment_reduce,
+                        'rater_answer_judgment_inform': rater_answer_judgment_inform,
                     })
                 new_answer.answer_start = answer_start
                 new_answer.answer_end = answer_end
@@ -352,6 +364,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 new_answer.rater_answer_predict_b = rater_answer_predict_b
                 new_answer.rater_answer_predict_c = rater_answer_predict_c
                 new_answer.evidence_url = evidence_url
+                new_answer.rater_answer_judgment_misleading_item = rater_answer_judgment_misleading_item
+                new_answer.rater_answer_judgment_remove = rater_answer_judgment_remove
+                new_answer.rater_answer_judgment_reduce = rater_answer_judgment_reduce
+                new_answer.rater_answer_judgment_inform = rater_answer_judgment_inform
                 new_answer.save()
                 instance, created = ItemWorkflow.objects.get_or_create(
                     item=item,

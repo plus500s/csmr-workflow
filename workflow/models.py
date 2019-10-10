@@ -68,6 +68,7 @@ class Answer(models.Model):
     answer_end = models.DateTimeField()
     rater_answer_evidence = models.TextField(blank=True, null=True)
     rater_answer_judgment = models.TextField(blank=True, null=True)
+    rater_answer_judgment_misleading_item = models.TextField(blank=True, null=True)
     rater_answer_judgment_remove = models.BooleanField(blank=True, null=True)
     rater_answer_judgment_reduce = models.BooleanField(blank=True, null=True)
     rater_answer_judgment_inform = models.BooleanField(blank=True, null=True)
