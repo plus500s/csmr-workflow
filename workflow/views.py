@@ -292,11 +292,18 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             previous_url = True
         form = None
         evidence_url = None
-        if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
+        if workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
             form = WithoutEvidenceWorkflowForm(request.POST)
         if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URL_INPUT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get('rater_answer_evidence') == 'True':
                 evidence_url = request.POST.get('evidence_url')
+            if request.POST.get('evidence_url') and request.POST.get('rater_answer_evidence') == 'False':
+                return get_form(
+                    rater=rater,
+                    previous_url=previous_url,
+                    workflow=workflow,
+                    error=True,
+                    messages=alerts.INPUTED_EVIDENCE_URL_WITHOUT_ANSWER_EVIDENCE)
             form = EvidenceInputWorkflowForm(request.POST)
         if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get('evidence_url') != 'None':
@@ -335,6 +342,15 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             rater_answer_judgment_remove = request.POST.get('rater_answer_judgment_remove')
             rater_answer_judgment_reduce = request.POST.get('rater_answer_judgment_reduce')
             rater_answer_judgment_inform = request.POST.get('rater_answer_judgment_inform')
+            if rater_answer_judgment == 'False':
+                judgment_additional_information = None
+                rater_answer_predict_a = None
+                rater_answer_predict_b = None
+                rater_answer_predict_c = None
+                rater_answer_judgment_misleading_item = None
+                rater_answer_judgment_remove = None
+                rater_answer_judgment_reduce = None
+                rater_answer_judgment_inform = None
             try:
                 new_answer, created = Answer.objects.get_or_create(
                     rater=rater,
