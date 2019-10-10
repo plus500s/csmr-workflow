@@ -35,36 +35,6 @@
             }
 
             $document.on('input', 'input[type="range"], ' + selector, function (e) {
-                var $inputRange = $(selector, e.target.parentNode);
-                var maxTotal = 100,
-                    inputs = [].slice.call(document.getElementsByClassName('input-slider')),
-                    getTotal = function () { // helper function to calculate the sum
-                        var sum = 0;
-                        inputs.forEach(function (input) {
-                            console.log(input.value);
-                            sum += parseInt(input.value, 10);
-                        });
-                        return sum;
-                    },
-                    maxReached = function (e) {  // check if the max is reached
-                        var sum = getTotal(), target;
-
-                        if (sum > maxTotal) {
-                            target = e.target;
-                            // set the max possible value if the user, for example, clicks too far to the right
-                            target.value = target.value - (sum - maxTotal);
-                            // next line is just for demonstrational purposes
-                            $inputRange.val(target.value).change();
-                            $inputRange.rangeslider('value', target.value);
-                            // prevent increasing the value
-                            e.preventDefault();
-                            return false;
-                        }
-
-                        // everything's fine, nothing to do.
-                        return true;
-                    };
-                maxReached(e);
                 valueOutput(e.target);
             });
             // Example functionality to demonstrate disabled functionality

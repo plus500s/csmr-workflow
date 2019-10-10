@@ -10,7 +10,7 @@ from workflow.choices import WORKFLOW_TYPE_CHOICES
 
 
 SUCCESS_ALERTS_XPATH = '//div[@class="alert alert-success alert-dismissible fade show"]'
-WARNING_ALERTS_XPATH =  '//div[@class="alert alert-warning alert-dismissible fade show"]'
+WARNING_ALERTS_XPATH = '//div[@class="alert alert-warning alert-dismissible fade show"]'
 WORKFLOW_NAME = 'workflow1'
 WORKFLOW_TYPE = WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW
 
@@ -20,12 +20,17 @@ class WorkflowPageWithUnExistedWorkflowTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name='invalid_workflow',
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type='invalid_type')
         rater = Rater.objects.create(
@@ -88,12 +93,17 @@ class WorkflowPageWithUnActiveItemTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         item = Item.objects.create(url='www.test.com', category='test_category', is_active=False)
         workflow = None
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
