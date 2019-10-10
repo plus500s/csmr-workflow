@@ -4,7 +4,7 @@ from unittest import mock
 from workflow.utils import CheckFileHash
 
 ITEMS_FILE_HASH = 'be7e1b8b667cf6efbd702b3e691015aa44065d11a3d8a104372c4e33e4729843'
-WORKFLOWS_FILE_HASH = '10887e057a08e9def9c132c0d6ea1f4dcabce83e9b2c2ff81b14cbb93d0e68d0'
+WORKFLOWS_FILE_HASH = 'd63b73ad14d754dc446fd83446049ac86762fad8c21071c90a0ceef2fc7f780d'
 PREVIOUS_DIFFERENT_HASH = 'previous_different_hash'
 
 FILE_HASHES = {

@@ -22,12 +22,17 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
         item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
@@ -56,7 +61,15 @@ class WorkflowRegisterTest(SeleniumBaseRemoteTest):
         rater_answer_predict_a = selenium.find_element_by_id('id_rater_answer_predict_a')
         rater_answer_predict_b = selenium.find_element_by_id('id_rater_answer_predict_b')
         rater_answer_predict_c = selenium.find_element_by_id('id_rater_answer_predict_c')
-
+        rater_answer_judgment_misleading_item = selenium.find_element_by_id(
+            'id_id_rater_answer_judgment_misleading_item_0_1')
+        rater_answer_judgment_reduce = selenium.find_element_by_id('id_id_rater_answer_judgment_reduce_0_1')
+        rater_answer_judgment_inform = selenium.find_element_by_id('id_id_rater_answer_judgment_inform_0_1')
+        rater_answer_judgment_remove = selenium.find_element_by_id('id_id_rater_answer_judgment_remove_0_1')
+        rater_answer_judgment_misleading_item.click()
+        rater_answer_judgment_remove.click()
+        rater_answer_judgment_reduce.click()
+        rater_answer_judgment_inform.click()
         submit = selenium.find_element_by_id('submit')
 
         rater_answer_evidence.click()
@@ -90,12 +103,17 @@ class WorkflowWithoutEvidenceTest(SeleniumBaseRemoteTest):
 
     def test_answer(self):
         Item.objects.create(url='www.test.com', category='test_category', is_active=True)
-        for x in range(2, 6):
+        for x in range(2, 11):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         Rater.objects.create(
@@ -142,12 +160,17 @@ class WorkflowWithoutJudgmentTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
-        for x in range(2, 6):
+        for x in range(2, 11):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         Rater.objects.create(
@@ -199,12 +222,17 @@ class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
-        for x in range(2, 6):
+        for x in range(2, 11):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         Rater.objects.create(
@@ -241,64 +269,6 @@ class WorkflowWithoutPredictionTest(SeleniumBaseRemoteTest):
 
         submit.click()
 
-        self.assertEqual(Answer.objects.all().count(), 0)
-
-
-class WorkflowWithInvalidSumPredictionTest(SeleniumBaseRemoteTest):
-
-    def test_answer(self):
-        Item.objects.create(url='www.test.com', category='test_category', is_active=True)
-        workflow = None
-        for x in range(2, 6):
-            workflow = Workflow.objects.create(
-                api_id=x,
-                name=WORKFLOW_NAME,
-                instruction=x,
-                judgment=x,
-                prediction=x,
-                type=WORKFLOW_TYPE)
-        Rater.objects.create(
-            email='test@test.com',
-            api_id='2',
-            age=10,
-            gender='m',
-            location='Kiev',
-            workflow=workflow)
-
-        selenium = self.selenium
-        selenium.get(self.live_server_url)
-
-        session = self.client.session
-        session['rater_id'] = '2'
-        session.save()
-        selenium.add_cookie({'name': 'sessionid', 'value': session._SessionBase__session_key,
-                             'secure': False, 'path': '/'})
-        selenium.get(f'{self.live_server_url}/workflow_form')
-
-        rater_answer_evidence = selenium.find_element_by_id('id_id_rater_answer_evidence_0_1')
-        rater_answer_evidence_url = selenium.find_element_by_id('id_evidence_url')
-
-        rater_answer_judgment = selenium.find_element_by_id('id_id_rater_answer_judgment_0_1')
-        rater_answer_predict_a = selenium.find_element_by_id('id_rater_answer_predict_a')
-        rater_answer_predict_b = selenium.find_element_by_id('id_rater_answer_predict_b')
-        rater_answer_predict_c = selenium.find_element_by_id('id_rater_answer_predict_c')
-
-        submit = selenium.find_element_by_id('submit')
-
-        rater_answer_judgment.click()
-        rater_answer_evidence.click()
-        rater_answer_evidence_url.send_keys('https://test.com')
-        send_predict_keys(
-            predict_a=rater_answer_predict_a,
-            predict_b=rater_answer_predict_b,
-            predict_c=rater_answer_predict_c,
-            key_a=10,
-            key_b=10,
-            key_c=10)
-
-        submit.click()
-        alerts = [alert.text.replace('\n×', '') for alert in selenium.find_elements_by_xpath(WARNING_ALERTS_XPATH)]
-        self.assertEqual(alerts, PREDICTION_QUESTIONS_ALERTS)
         self.assertEqual(Answer.objects.all().count(), 0)
 
 
@@ -307,12 +277,17 @@ class WorkflowWithInvalidUserWorkflowTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
-        for x in range(1, 5):
+        for x in range(2, 11):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
@@ -357,12 +332,17 @@ class WorkflowWithoutUserInSessionWorkflowTest(SeleniumBaseRemoteTest):
     def test_answer(self):
         item = Item.objects.create(url='www.test.com', category='test_category', is_active=True)
         workflow = None
-        for x in range(1, 5):
+        for x in range(2, 11):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         rater = Rater.objects.create(

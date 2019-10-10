@@ -18,12 +18,17 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
         previous_item = Item.objects.create(url='www.test.com', category='test_category1', is_active=True)
         next_item = Item.objects.create(url='www.testtest.com', category='test_category2', is_active=True)
 
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=WORKFLOW_NAME,
                 instruction=x,
-                judgment=x,
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
                 prediction=x,
                 type=WORKFLOW_TYPE)
         rater = Rater.objects.create(
@@ -44,6 +49,10 @@ class PreviousItemTest(SeleniumBaseRemoteTest):
             answer_end=answer_end,
             rater_answer_evidence='True',
             rater_answer_judgment='True',
+            rater_answer_judgment_misleading_item='1',
+            rater_answer_judgment_remove='True',
+            rater_answer_judgment_reduce='True',
+            rater_answer_judgment_inform='True',
             judgment_additional_information='Some additional test info',
             rater_answer_predict_a='10',
             rater_answer_predict_b='20',
