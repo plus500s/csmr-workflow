@@ -25,3 +25,7 @@ EMAIL_USE_TLS=True
 EMAIL_PORT=587
 EMAIL_HOST_USER=umichworkflow@gmail.com
 EMAIL_HOST_PASSWORD=alternativeworkflows
+
+# <--version-->
+VERSION=mrf.17.10.2019.1
+

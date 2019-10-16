@@ -16,3 +16,8 @@ INTEGRITY_ERROR_ALERTS = ['Something went wrong.',
                           'Please, try again.']
 INVALID_PREVIOUS_ITEM_ALERTS = ['Got no previous item for user',
                                 'Please, start with  workflow page.']
+INPUTED_EVIDENCE_URL_WITHOUT_ANSWER_EVIDENCE = [
+    'Gor Evidence Url with "No" in Corroborating evidence.',
+    'Please, select "Yes" in Corroborating evidence or remove Evidence Url.',
+    'Otherwise, we will not save Your answer.'
+]

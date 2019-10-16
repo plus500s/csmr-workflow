@@ -7,13 +7,18 @@ from tests.selenium.base import SeleniumBaseRemoteTest
 class SignUpTest(SeleniumBaseRemoteTest):
 
     def test_register_with_invalid_data(self):
-        for x in range(1, 5):
+        for x in range(1, 10):
             Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x,)
 
         selenium = self.selenium
         selenium.get(f'{self.live_server_url}/sign_up')
@@ -35,13 +40,18 @@ class SignUpTest(SeleniumBaseRemoteTest):
 
     @mock.patch('workflow.tasks.send_mail_task.delay')
     def test_register(self, _):
-        for x in range(1, 5):
+        for x in range(1, 10):
             Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
 
         selenium = self.selenium
         selenium.get(f'{self.live_server_url}/sign_up')
@@ -72,13 +82,19 @@ class SignInTest(SeleniumBaseRemoteTest):
                          'Please, try again or sign up as a new user.']
 
     def test_sign_in_with_invalid_data(self):
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         Rater.objects.create(
             email='testsignin@test.com',
             api_id='test_sign_in',
@@ -100,13 +116,19 @@ class SignInTest(SeleniumBaseRemoteTest):
             self.assertTrue(alert.text.replace('\n×', '') in self.UN_SUCCESS_ALERTS)
 
     def test_sign_in(self):
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         rater = Rater.objects.create(
             email='testsignin@test.com',
             api_id='test_sign_in',
@@ -134,13 +156,19 @@ class LogoutTest(SeleniumBaseRemoteTest):
     UN_SUCCESS_ALERTS = ['You are not signed in our system!']
 
     def test_logout_without_login(self):
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x,)
+
         Rater.objects.create(
             email='testslogout@test.com',
             api_id='test_logout',
@@ -163,13 +191,19 @@ class LogoutTest(SeleniumBaseRemoteTest):
             self.assertTrue(alert.text.replace('\n×', '') in self.UN_SUCCESS_ALERTS)
 
     def test_logout(self):
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         rater = Rater.objects.create(
             email='testlogout@test.com',
             api_id='test_logout',

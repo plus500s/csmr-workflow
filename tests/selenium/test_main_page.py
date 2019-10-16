@@ -13,13 +13,19 @@ class MainPageTest(SeleniumBaseRemoteTest):
 
     def test_without_login(self):
         Item.objects.create(url='www.test.com', category='test_category', is_active=True)
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         Rater.objects.create(
             email='test_main@test.com',
             api_id='test_main',
@@ -50,13 +56,19 @@ class MainPageTest(SeleniumBaseRemoteTest):
 
     def test_with_login(self):
         Item.objects.create(id=1, url='www.test.com', category='test_category', is_active=True)
-        for x in range(1, 5):
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         rater = Rater.objects.create(
             email='test_main@test.com',
             api_id='test_main',

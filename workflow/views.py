@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from django.db import IntegrityError
 from django.db.models import F, Count
@@ -16,6 +17,7 @@ from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
+VERSION = os.getenv('VERSION', 'mrf.15.10.2019.1')
 
 
 def main_view(request):
@@ -29,10 +31,11 @@ def main_view(request):
             return render(request, 'workflow/main.html', {
                 'rater': rater_id,
                 'all_items': all_items,
-                'used_items': used_items})
+                'used_items': used_items,
+                'version': VERSION})
         except ObjectDoesNotExist:
-            return render(request, 'workflow/main.html', {'rater': None})
-    return render(request, 'workflow/main.html', {'rater': rater_id})
+            return render(request, 'workflow/main.html', {'rater': None, 'version': VERSION})
+    return render(request, 'workflow/main.html', {'rater': rater_id, 'version': VERSION})
 
 
 def sign_up(request):
@@ -42,7 +45,7 @@ def sign_up(request):
             return render(request, 'workflow/sign_up.html',
                           {'error': True, 'form': form, 'messages':
                               ['There is no Workflow in database',
-                               'Please, create at least one']})
+                               'Please, create at least one'], 'version': VERSION})
         try:
             api_id = '{}{}'.format(request.POST.get('email').split('@', 1)[0], datetime.today().date())
             form = SignUpForm(request.POST)
@@ -64,19 +67,20 @@ def sign_up(request):
                 return render(request, 'workflow/main.html', {
                     'new_rater': 'done',
                     'rater': rater_id,
-                    'all_items': all_items})
+                    'all_items': all_items,
+                    'version': VERSION})
             errors = [value for value in form.errors.values()]
             form = SignUpForm()
             return render(request, 'workflow/sign_up.html',
                           {'error': True, 'form': form, 'messages':
-                              [message for message in errors]})
+                              [message for message in errors], 'version': VERSION})
         except IntegrityError:
             render(request, 'workflow/sign_up.html',
                    {'error': True, 'form': form, 'messages':
                        ['There is no Workflow in database',
-                        'Please, create at least one']})
+                        'Please, create at least one'], 'version': VERSION})
     form = SignUpForm()
-    return render(request, 'workflow/sign_up.html', {'form': form})
+    return render(request, 'workflow/sign_up.html', {'form': form, 'version': VERSION})
 
 
 def sign_in(request):
@@ -92,19 +96,21 @@ def sign_in(request):
                     'old_rater': 'done',
                     'rater': rater.api_id,
                     'all_items': all_items,
-                    'used_items': used_items})
+                    'used_items': used_items,
+                    'version': VERSION})
             except ObjectDoesNotExist:
                 return render(request, 'workflow/sign_in.html', {
                     'form': form,
                     'error': True,
-                    'messages': alerts.INVALID_USER_SIGN_IN_ALERTS})
+                    'messages': alerts.INVALID_USER_SIGN_IN_ALERTS,
+                    'version': VERSION})
         errors = [value for value in form.errors.values()]
         form = SignInForm()
         return render(request, 'workflow/sign_up.html',
                       {'error': True, 'form': form, 'messages':
-                          [message for message in errors]})
+                          [message for message in errors], 'version': VERSION})
     form = SignInForm()
-    return render(request, 'workflow/sign_in.html', {'form': form})
+    return render(request, 'workflow/sign_in.html', {'form': form, 'version': VERSION})
 
 
 def logout(request):
@@ -112,12 +118,12 @@ def logout(request):
         return render(request, 'workflow/sign_in.html', {
             'form': SignInForm(),
             'error': True,
-            'messages': ['You are not signed in our system!']})
+            'messages': ['You are not signed in our system!'], 'version': VERSION})
     if request.method == 'POST':
         request.session.pop('rater_id')
-        return render(request, 'workflow/main.html', {'logout': 'done'})
+        return render(request, 'workflow/main.html', {'logout': 'done', 'version': VERSION})
 
-    return render(request, 'workflow/logout.html')
+    return render(request, 'workflow/logout.html', {'version': VERSION})
 
 
 def workflow_form(request, previous_url=None):  # noqa: too-many-locals
@@ -126,20 +132,23 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
         return render(request, 'workflow/sign_in.html', {
             'form': SignInForm(),
             'error': True,
-            'messages': alerts.NOT_SIGNED_IN_USER_WORKFLOW_ALERTS})
+            'messages': alerts.NOT_SIGNED_IN_USER_WORKFLOW_ALERTS,
+            'version': VERSION})
     try:
         rater = Rater.objects.get(api_id=rater_id)
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
-            'messages': alerts.INVALID_USER_ALERTS})
+            'messages': alerts.INVALID_USER_ALERTS,
+            'version': VERSION})
     try:
         workflow = rater.workflow
     except ObjectDoesNotExist:
         return render(request, 'workflow/main.html', {
             'error': True,
             'messages': alerts.INVALID_WORKFLOW_ALERTS,
-            'rater': rater_id})
+            'rater': rater_id,
+            'version': VERSION})
 
     def get_item(rater, previous_url):
         last_answer = None
@@ -172,7 +181,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'workflow': 'done',
             'rater': rater_id,
             'all_items': all_items,
-            'used_items': used_items})
+            'used_items': used_items,
+            'version': VERSION})
 
     if not item and previous_url:
         return render(request, 'workflow/main.html', {
@@ -180,13 +190,15 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             'messages': alerts.INVALID_PREVIOUS_ITEM_ALERTS,
             'rater': rater_id,
             'all_items': all_items,
-            'used_items': used_items})
+            'used_items': used_items,
+            'version': VERSION})
 
     def get_no_workflow_form():
         return render(request, 'workflow/main.html', {
             'error': True,
             'messages': alerts.INVALID_WORKFLOW_ALERTS,
-            'rater': rater_id})
+            'rater': rater_id,
+            'version': VERSION})
 
     def get_form(rater, previous_url, workflow, messages=None, error=False):
         item_last_answer = get_item(rater, previous_url)
@@ -200,13 +212,19 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 'workflow': 'done',
                 'rater': rater_id,
                 'all_items': all_items,
-                'used_items': used_items})
+                'used_items': used_items,
+                'version': VERSION})
         form = None
         initial = {
             'item': item.url,
             'instruction': workflow.instruction,
             'corroborating_question': workflow.corroborating_question,
-            'judgment_question': workflow.judgment,
+            'judgment_enough_information': workflow.judgment_enough_information,
+            'judgment_misleading_item': workflow.judgment_misleading_item,
+            'judgment_remove_reduce_inform_head': workflow.judgment_remove_reduce_inform_head,
+            'judgment_question_remove': workflow.judgment_remove,
+            'judgment_question_reduce': workflow.judgment_reduce,
+            'judgment_question_inform': workflow.judgment_inform,
             'judgment_additional': workflow.judgment_additional,
             'prediction_question': workflow.prediction,
         }
@@ -218,6 +236,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             initial['rater_answer_predict_a'] = last_answer.rater_answer_predict_a
             initial['rater_answer_predict_b'] = last_answer.rater_answer_predict_b
             initial['rater_answer_predict_c'] = last_answer.rater_answer_predict_c
+            initial['rater_answer_judgment_misleading_item'] = last_answer.rater_answer_judgment_misleading_item
+            initial['rater_answer_judgment_remove'] = last_answer.rater_answer_judgment_remove
+            initial['rater_answer_judgment_reduce'] = last_answer.rater_answer_judgment_reduce
+            initial['rater_answer_judgment_inform'] = last_answer.rater_answer_judgment_inform
 
         if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
             form = WithoutEvidenceWorkflowForm
@@ -243,7 +265,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                     'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
                     'rater': rater_id,
                     'all_items': all_items,
-                    'used_items': used_items})
+                    'used_items': used_items,
+                    'version': VERSION})
         if not form:
             return get_no_workflow_form()
 
@@ -257,9 +280,9 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 'messages': messages,
                 'error': error,
                 'previous_url': previous_url,
-            })
+                'version': VERSION})
         except ObjectDoesNotExist:
-            return render(request, 'workflow/main.html', {'workflow': 'done', 'rater': rater_id})
+            return render(request, 'workflow/main.html', {'workflow': 'done', 'rater': rater_id, 'version': VERSION})
 
     def post_form():  # noqa: too-many-locals
         previous_url = None
@@ -267,11 +290,18 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             previous_url = True
         form = None
         evidence_url = None
-        if workflow.type == workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
+        if workflow.type == WORKFLOW_TYPE_CHOICES.WITHOUT_EVIDENCE_URL_WORKFLOW:
             form = WithoutEvidenceWorkflowForm(request.POST)
         if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URL_INPUT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get('rater_answer_evidence') == 'True':
                 evidence_url = request.POST.get('evidence_url')
+            if request.POST.get('evidence_url') and request.POST.get('rater_answer_evidence') == 'False':
+                return get_form(
+                    rater=rater,
+                    previous_url=previous_url,
+                    workflow=workflow,
+                    error=True,
+                    messages=alerts.INPUTED_EVIDENCE_URL_WITHOUT_ANSWER_EVIDENCE)
             form = EvidenceInputWorkflowForm(request.POST)
         if workflow.type == WORKFLOW_TYPE_CHOICES.EVIDENCE_URLS_JUDGMENT_WORKFLOW:
             if request.POST.get('evidence_url') and request.POST.get('evidence_url') != 'None':
@@ -293,7 +323,8 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 return render(request, 'workflow/main.html', {
                     'error': True,
                     'messages': alerts.NO_ANSWERS_FOR_CORROBORATING_CHOICES_ALERTS,
-                    'rater': rater_id})
+                    'rater': rater_id,
+                    'version': VERSION})
 
         if form.is_valid():
             item = Item.objects.get(id=request.POST.get('item'))
@@ -305,27 +336,19 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
             rater_answer_predict_a = request.POST.get('rater_answer_predict_a')
             rater_answer_predict_b = request.POST.get('rater_answer_predict_b')
             rater_answer_predict_c = request.POST.get('rater_answer_predict_c')
-            # check, that prediction answers are 100 in sum.
-            try:
-                prediction_sum = sum([int(rater_answer_predict_a),
-                                      int(rater_answer_predict_b),
-                                      int(rater_answer_predict_c)])
-                if prediction_sum != 100:
-                    return get_form(
-                        rater=rater,
-                        previous_url=previous_url,
-                        workflow=workflow,
-                        error=True,
-                        messages=alerts.PREDICTION_QUESTIONS_ALERTS)
-            except TypeError:
-                return get_form(
-                    rater=rater,
-                    previous_url=previous_url,
-                    workflow=workflow,
-                    error=True,
-                    messages=alerts.PREDICTION_QUESTIONS_ALERTS)
-
-            previous_url = None
+            rater_answer_judgment_misleading_item = request.POST.get('rater_answer_judgment_misleading_item')
+            rater_answer_judgment_remove = request.POST.get('rater_answer_judgment_remove')
+            rater_answer_judgment_reduce = request.POST.get('rater_answer_judgment_reduce')
+            rater_answer_judgment_inform = request.POST.get('rater_answer_judgment_inform')
+            if rater_answer_judgment == 'False':
+                judgment_additional_information = None
+                rater_answer_predict_a = None
+                rater_answer_predict_b = None
+                rater_answer_predict_c = None
+                rater_answer_judgment_misleading_item = None
+                rater_answer_judgment_remove = None
+                rater_answer_judgment_reduce = None
+                rater_answer_judgment_inform = None
             try:
                 new_answer, created = Answer.objects.get_or_create(
                     rater=rater,
@@ -341,6 +364,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                         'rater_answer_predict_b': rater_answer_predict_b,
                         'rater_answer_predict_c': rater_answer_predict_c,
                         'evidence_url': evidence_url,
+                        'rater_answer_judgment_misleading_item': rater_answer_judgment_misleading_item,
+                        'rater_answer_judgment_remove': rater_answer_judgment_remove,
+                        'rater_answer_judgment_reduce': rater_answer_judgment_reduce,
+                        'rater_answer_judgment_inform': rater_answer_judgment_inform,
                     })
                 new_answer.answer_start = answer_start
                 new_answer.answer_end = answer_end
@@ -351,6 +378,10 @@ def workflow_form(request, previous_url=None):  # noqa: too-many-locals
                 new_answer.rater_answer_predict_b = rater_answer_predict_b
                 new_answer.rater_answer_predict_c = rater_answer_predict_c
                 new_answer.evidence_url = evidence_url
+                new_answer.rater_answer_judgment_misleading_item = rater_answer_judgment_misleading_item
+                new_answer.rater_answer_judgment_remove = rater_answer_judgment_remove
+                new_answer.rater_answer_judgment_reduce = rater_answer_judgment_reduce
+                new_answer.rater_answer_judgment_inform = rater_answer_judgment_inform
                 new_answer.save()
                 instance, created = ItemWorkflow.objects.get_or_create(
                     item=item,
@@ -429,6 +460,7 @@ class MTurkRegister(TemplateView):
             'worker_id': worker_id,
             'hit_id': hit_id,
             'assignment_id': assignment_id,
+            'version': VERSION
         }
         return self._return_form(request, data)
 
@@ -474,6 +506,7 @@ class MTurkRegister(TemplateView):
                 'worker_id': worker_id,
                 'hit_id': hit_id,
                 'assignment_id': assignment_id,
+                'version': VERSION
             }
             return self._return_form(request, data)
         context = self.get_context_data(**kwargs)
@@ -481,3 +514,13 @@ class MTurkRegister(TemplateView):
 
     def _return_form(self, request, data):
         return render(request, self.template_name, data)
+
+
+@method_decorator(xframe_options_exempt, name='dispatch')
+class MTurkDemographics(TemplateView):
+    pass
+
+
+@method_decorator(xframe_options_exempt, name='dispatch')
+class MTurkLabel(TemplateView):
+    pass

@@ -17,7 +17,7 @@ class RangeSlider(forms.TextInput):
         html = """
         <input type="range" step="5" id="{}" name="{}" value="{}" data-rangeslider class='input-slider'>
         <br>
-        <h5><strong><output class="output-slider"></output>%</strong></h5>
+        <h5><strong><output class="output-slider"></output></strong></h5>
         """.format(input_id, name, value)
         return mark_safe(html)
 
@@ -87,4 +87,16 @@ class EvidenceUrlChoicesWidget(widgets.ChoiceWidget):
                 {a_href_tag}
                 </label></div>"""
         html += finish_html
+        return mark_safe(html)
+
+
+class CorroboratingEvidenceWidget(forms.URLInput):
+    def __init__(self, elem_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.elem_name = str(elem_name)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        html = """
+        <p>{}</p>
+        """.format(value)
         return mark_safe(html)

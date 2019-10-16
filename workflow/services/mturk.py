@@ -13,8 +13,8 @@ QUESTION_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 """
 HITS_LIST = {
     'register': 'https://labeling.umsi.io/mturk_register',
-    'demographics': 'https://two.com/',
-    'label': 'https://three.com/',
+    'demographics': 'https://labeling.umsi.io/mturk_demographics',
+    'label': 'https://labeling.umsi.io/mturk_label',
 }
 
 
