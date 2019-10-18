@@ -17,7 +17,7 @@ from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
-VERSION = os.getenv('VERSION', 'mrf.15.10.2019.1')
+VERSION = os.getenv('VERSION', 'mrf.18.10.2019.2')
 
 
 def main_view(request):
@@ -431,7 +431,6 @@ class MTurkRegister(TemplateView):
     disable_header = True
 
     def get(self, request, *args, **kwargs):
-        disable_submit = True
         worker_id = request.GET.get('workerId')
         hit_id = request.GET.get('hitId')
         assignment_id = request.GET.get('assignmentId')
@@ -452,10 +451,10 @@ class MTurkRegister(TemplateView):
             hit_id=hit_id,
             rater=rater,
         )
+
         data = {
             'form': self.form,
-            'url': self.start_url,
-            'disable_submit': disable_submit,
+            'url': self.after_check_url,
             'disable_header': self.disable_header,
             'worker_id': worker_id,
             'hit_id': hit_id,
@@ -464,53 +463,53 @@ class MTurkRegister(TemplateView):
         }
         return self._return_form(request, data)
 
-    def post(self, request, **kwargs):  # noqa: too-many-locals
-        if request.POST.get('first_question'):  # TODO check what we need to get from POST
-            first_question = request.POST.get('first_question')
-            second_question = request.POST.get('second_question')
-            third_question = request.POST.get('third_question')
-            initial = {
-                'first_question': first_question,
-                'second_question': second_question,
-                'third_question': third_question,
-            }
-            disable_submit = True
-            url = self.start_url
-            worker_id = request.POST.get('workerId')
-            hit_id = request.POST.get('hitId')
-            assignment_id = request.POST.get('assignmentId')
-            try:
-                rater = Rater.objects.get(worker_id=request.POST.get('worker_id'))
-            except Rater.DoesNotExist:
-                context = self.get_context_data(**kwargs)
-                return self.render_to_response(context, status=404)  # TODO check what we need to return
-
-            assignment = Assignment.objects.get(rater=rater, is_active=True)
-            if self.form(request.POST).is_valid():
-                disable_submit = False
-                url = self.after_check_url
-            # if not self.form(request.POST).is_valid():
-            #     rater.rejected_state = True
-            #     rater.save()
-            #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
-            rater.completed_register_state = True
-            rater.rejected_state = False
-            rater.save()
-            assignment.is_active = False
-            assignment.save()
-            data = {
-                'form': self.form(initial=initial),
-                'url': url,
-                'disable_submit': disable_submit,
-                'disable_header': self.disable_header,
-                'worker_id': worker_id,
-                'hit_id': hit_id,
-                'assignment_id': assignment_id,
-                'version': VERSION
-            }
-            return self._return_form(request, data)
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context, status=404)  # TODO check what we need to return
+    # def post(self, request, **kwargs):  # noqa: too-many-locals
+    #     if request.POST.get('first_question'):  # TODO check what we need to get from POST
+    #         first_question = request.POST.get('first_question')
+    #         second_question = request.POST.get('second_question')
+    #         third_question = request.POST.get('third_question')
+    #         initial = {
+    #             'first_question': first_question,
+    #             'second_question': second_question,
+    #             'third_question': third_question,
+    #         }
+    #         disable_submit = True
+    #         url = self.start_url
+    #         worker_id = request.POST.get('workerId')
+    #         hit_id = request.POST.get('hitId')
+    #         assignment_id = request.POST.get('assignmentId')
+    #         try:
+    #             rater = Rater.objects.get(worker_id=request.POST.get('worker_id'))
+    #         except Rater.DoesNotExist:
+    #             context = self.get_context_data(**kwargs)
+    #             return self.render_to_response(context, status=404)  # TODO check what we need to return
+    #
+    #         assignment = Assignment.objects.get(rater=rater, is_active=True)
+    #         if self.form(request.POST).is_valid():
+    #             disable_submit = False
+    #             url = self.after_check_url
+    #         # if not self.form(request.POST).is_valid():
+    #         #     rater.rejected_state = True
+    #         #     rater.save()
+    #         #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
+    #         rater.completed_register_state = True
+    #         rater.rejected_state = False
+    #         rater.save()
+    #         assignment.is_active = False
+    #         assignment.save()
+    #         data = {
+    #             'form': self.form(initial=initial),
+    #             'url': url,
+    #             'disable_submit': disable_submit,
+    #             'disable_header': self.disable_header,
+    #             'worker_id': worker_id,
+    #             'hit_id': hit_id,
+    #             'assignment_id': assignment_id,
+    #             'version': VERSION
+    #         }
+    #         return self._return_form(request, data)
+    #     context = self.get_context_data(**kwargs)
+    #     return self.render_to_response(context, status=404)  # TODO check what we need to return
 
     def _return_form(self, request, data):
         return render(request, self.template_name, data)
