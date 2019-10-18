@@ -7,7 +7,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):  # noqa
         try:
-
             mturk = MTurkConnection()
             hits = mturk.client.list_hits()
             all_assignments = []

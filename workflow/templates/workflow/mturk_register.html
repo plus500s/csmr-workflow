@@ -7,16 +7,25 @@
 {% endblock %}
 {% block content %}
 
-    <form action="{{ host }}" method="post">
+    {% if host == 'mturk_register' %}
+        <form action="{% url 'mturk_register' %}" method="post" id="form">
+    {% else %}
+        <form action="{{ host }}" method="post" id="form">
+    {% endif %}
 
-        {% csrf_token %}
-        <table style="width:100px">
-            {{ form|crispy }}
-        </table>
-
-        <input type="submit" value="Submit" id="submit" class="btn btn-success">
-        <input type="hidden" name="workerId" id="workerId" value="{{ worker_id }}">
-        <input type="hidden" name="hitId" id="hitId" value="{{ hit_id }}">
-        <input type="hidden" name="assignmentId" id="assignmentId" value="{{ assignment_id }}">
-    </form>
+{% csrf_token %}
+<table style="width:100px">
+    {{ form|crispy }}
+</table>
+{% if disable_submit %}
+    <input type="submit" value="Submit" id="submit" disabled="disabled" class="btn btn-success">
+    <input type="submit" value="Check" id="submit" class="btn btn-success">
+{% else %}
+    <input type="submit" value="Submit" id="submit" class="btn btn-success">
+    <input type="submit" value="Check" id="submit" disabled="disabled" class="btn btn-success">
+{% endif %}
+<input type="hidden" name="workerId" id="workerId" value="{{ worker_id }}">
+<input type="hidden" name="hitId" id="hitId" value="{{ hit_id }}">
+<input type="hidden" name="assignmentId" id="assignmentId" value="{{ assignment_id }}">
+</form>
 {% endblock %}
