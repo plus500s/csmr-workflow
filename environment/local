@@ -27,6 +27,9 @@ EMAIL_HOST_USER=umichworkflow@gmail.com
 EMAIL_HOST_PASSWORD=alternativeworkflows
 
 # <--version-->
-VERSION=mrf.18.10.2019.2
+VERSION=dev.21.10.2019.1
 
 # <--AWS-->
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+MTURK_REGION=

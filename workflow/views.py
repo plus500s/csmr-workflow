@@ -17,7 +17,7 @@ from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
-VERSION = os.getenv('VERSION', 'mrf.18.10.2019.2')
+VERSION = os.getenv('VERSION', 'dev.21.10.2019.1')
 
 
 def main_view(request):
