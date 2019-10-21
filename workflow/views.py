@@ -436,27 +436,53 @@ class MTurkRegister(TemplateView):
         hit_id = request.GET.get('hitId')
         assignment_id = request.GET.get('assignmentId')
         if not worker_id:
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=404)
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Got no worker'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
         rater, _ = Rater.objects.get_or_create(worker_id=worker_id)
-        if rater.rejected_state or rater.completed_register_state or assignment_id == "ASSIGNMENT_ID_NOT_AVAILABLE":
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=200)
-
+        if rater.rejected_state or rater.completed_register_state:
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Worker already done this HIT'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
+        if assignment_id == "ASSIGNMENT_ID_NOT_AVAILABLE":
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Not available assignment'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
         if not rater.workflow:
             rater.workflow = Workflow.objects.order_by('?').first()
         rater.save()
+        Assignment.objects.filter(rater=rater).update(is_active=False)
 
-        Assignment.objects.get_or_create(
+        current_assignment, _ = Assignment.objects.get_or_create(
             assignment_id=assignment_id,
             hit_id=hit_id,
             rater=rater,
         )
+        current_assignment.is_active = True
+        current_assignment.save()
 
         data = {
             'form': self.form,
             'host': self.start_url,
-            'disable_header': self.disable_header,
+            'disable_header': True,
             'worker_id': worker_id,
             'hit_id': hit_id,
             'disable_submit': disable_submit,
@@ -483,19 +509,25 @@ class MTurkRegister(TemplateView):
             try:
                 rater = Rater.objects.get(worker_id=request.POST.get('workerId'))
             except Rater.DoesNotExist:
-                context = self.get_context_data(**kwargs)
-                return self.render_to_response(context, status=404)  # TODO check what we need to return
-
+                data = {
+                    'disable_form': True,
+                    'error': True,
+                    'messages': ['Got no worker'],
+                    'disable_submit': disable_submit,
+                    'disable_header': True,
+                    'version': VERSION
+                }
+                return self._return_form(request, data)
             assignment = Assignment.objects.get(rater=rater, is_active=True)
+            rater.rejected_state = False
             if self.form(request.POST).is_valid():
                 disable_submit = False
                 url = self.after_check_url
-            # if not self.form(request.POST).is_valid():
-            #     rater.rejected_state = True
-            #     rater.save()
+            if not self.form(request.POST).is_valid():
+                rater.rejected_state = True
+                rater.save()
             #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
             rater.completed_register_state = True
-            rater.rejected_state = False
             rater.save()
             assignment.is_active = False
             assignment.save()
@@ -503,15 +535,22 @@ class MTurkRegister(TemplateView):
                 'form': self.form(initial=initial),
                 'host': url,
                 'disable_submit': disable_submit,
-                'disable_header': self.disable_header,
+                'disable_header': True,
                 'worker_id': worker_id,
                 'hit_id': hit_id,
                 'assignment_id': assignment_id,
                 'version': VERSION
             }
             return self._return_form(request, data)
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context, status=404)  # TODO check what we need to return
+        data = {
+            'disable_form': True,
+            'error': True,
+            'messages': ['Problems with form'],
+            'disable_header': True,
+            'disable_submit': True,
+            'version': VERSION
+        }
+        return self._return_form(request, data)
 
     def _return_form(self, request, data):
         return render(request, self.template_name, data)
