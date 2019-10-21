@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from boto3.exceptions import Boto3Error
 
 from .email_templates import registration_rater_template
 from .tasks import send_mail_task
@@ -16,10 +15,9 @@ from .form import SignInForm, SignUpForm, EvidenceInputWorkflowForm, JudgmentFor
 from .models import Rater, Answer, Item, Workflow, ItemWorkflow, Assignment
 from .choices import WORKFLOW_TYPE_CHOICES
 from . import alerts
-from .services.mturk import MTurkConnection
 
 NONE_OF_THE_ABOVE_TUPLE = (None, 'None of the above provides useful evidence')
-VERSION = os.getenv('VERSION', 'dev.09.10.2019.1')
+VERSION = os.getenv('VERSION', 'mrf.18.10.2019.2')
 
 
 def main_view(request):
@@ -428,65 +426,141 @@ class MTurkRegister(TemplateView):
     http_method_names = ['get', 'post']
     template_name = 'workflow/mturk_register.html'
     form = MTurkRegisterForm
+    start_url = 'mturk_register'
+    after_check_url = 'https://workersandbox.mturk.com/mturk/externalSubmit'
     disable_header = True
 
-    def post(self, request, **kwargs):
-        connection = self._create_connection(**kwargs)
-        if request.POST.get('first_question'):  # TODO set to real element after form with questions will be created
-            return self._post_form(request, connection, **kwargs)
-
-        return self._post_register(request, connection, **kwargs)
-
-    def _post_register(self, request, connection, **kwargs):
-        worker_id = request.POST.get('workerId')
-        hit_id = request.POST.get('hitId')
-        assignment_id = request.POST.get('assignmentId')
+    def get(self, request, *args, **kwargs):
+        disable_submit = True
+        worker_id = request.GET.get('workerId')
+        hit_id = request.GET.get('hitId')
+        assignment_id = request.GET.get('assignmentId')
+        if not worker_id:
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Got no worker'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
         rater, _ = Rater.objects.get_or_create(worker_id=worker_id)
         if rater.rejected_state or rater.completed_register_state:
-
-            connection.accept_assignment(assignment_id, 'deny', False)
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=200)
-
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Worker already done this HIT'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
+        if assignment_id == "ASSIGNMENT_ID_NOT_AVAILABLE":
+            data = {
+                'disable_form': True,
+                'error': True,
+                'messages': ['Not available assignment'],
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
         if not rater.workflow:
             rater.workflow = Workflow.objects.order_by('?').first()
         rater.save()
+        Assignment.objects.filter(rater=rater).update(is_active=False)
 
-        Assignment.objects.get_or_create(
+        current_assignment, _ = Assignment.objects.get_or_create(
             assignment_id=assignment_id,
             hit_id=hit_id,
             rater=rater,
         )
-        request.session['worker_id'] = worker_id
-        return render(request, self.template_name, {
+        current_assignment.is_active = True
+        current_assignment.save()
+
+        data = {
             'form': self.form,
-            'disable_header': self.disable_header,
-            'version': VERSION,
-        })
+            'host': self.start_url,
+            'disable_header': True,
+            'worker_id': worker_id,
+            'hit_id': hit_id,
+            'disable_submit': disable_submit,
+            'assignment_id': assignment_id,
+            'version': VERSION
+        }
+        return self._return_form(request, data)
 
-    def _post_form(self, request, connection, **kwargs):
-        try:
-            rater = Rater.objects.get(worker_id=request.session.get('worker_id'))
-        except Rater.DoesNotExist:
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=404)  # TODO check what we need to return
+    def post(self, request, **kwargs):  # noqa: too-many-locals
+        if request.POST.get('first_question'):  # TODO check what we need to get from POST
+            first_question = request.POST.get('first_question')
+            second_question = request.POST.get('second_question')
+            third_question = request.POST.get('third_question')
+            initial = {
+                'first_question': first_question,
+                'second_question': second_question,
+                'third_question': third_question,
+            }
+            disable_submit = True
+            url = self.start_url
+            worker_id = request.POST.get('workerId')
+            hit_id = request.POST.get('hitId')
+            assignment_id = request.POST.get('assignmentId')
+            try:
+                rater = Rater.objects.get(worker_id=request.POST.get('workerId'))
+            except Rater.DoesNotExist:
+                data = {
+                    'disable_form': True,
+                    'error': True,
+                    'messages': ['Got no worker'],
+                    'disable_submit': disable_submit,
+                    'disable_header': True,
+                    'version': VERSION
+                }
+                return self._return_form(request, data)
+            assignment = Assignment.objects.get(rater=rater, is_active=True)
+            rater.rejected_state = False
+            if self.form(request.POST).is_valid():
+                disable_submit = False
+                url = self.after_check_url
+            if not self.form(request.POST).is_valid():
+                rater.rejected_state = True
+                rater.save()
+            #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
+            rater.completed_register_state = True
+            rater.save()
+            assignment.is_active = False
+            assignment.save()
+            data = {
+                'form': self.form(initial=initial),
+                'host': url,
+                'disable_submit': disable_submit,
+                'disable_header': True,
+                'worker_id': worker_id,
+                'hit_id': hit_id,
+                'assignment_id': assignment_id,
+                'version': VERSION
+            }
+            return self._return_form(request, data)
+        data = {
+            'disable_form': True,
+            'error': True,
+            'messages': ['Problems with form'],
+            'disable_header': True,
+            'disable_submit': True,
+            'version': VERSION
+        }
+        return self._return_form(request, data)
 
-        assignment = Assignment.objects.get(rater=rater, is_active=True)
+    def _return_form(self, request, data):
+        return render(request, self.template_name, data)
 
-        # if not self.form(request.POST).is_valid():
-        #     rater.rejected_state = True
-        #     rater.save()
-        #     return connection.accept_assignment(self, 'deny', True)  # TODO return here after form created
-        rater.completed_register_state = True
-        rater.rejected_state = False
-        rater.save()
-        assignment.is_active = False
-        assignment.save()
-        return connection.accept_assignment(rater.assignment_id, 'accept', True)
 
-    def _create_connection(self, **kwargs):
-        try:
-            return MTurkConnection()
-        except Boto3Error:
-            context = self.get_context_data(**kwargs)
-            return self.render_to_response(context, status=500)
+@method_decorator(xframe_options_exempt, name='dispatch')
+class MTurkDemographics(TemplateView):
+    pass
+
+
+@method_decorator(xframe_options_exempt, name='dispatch')
+class MTurkLabel(TemplateView):
+    pass

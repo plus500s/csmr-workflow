@@ -61,9 +61,8 @@ class TestRegister(TestCase):
         }
 
     @mock.patch.object(MTurkConnection, '__new__')
-    def test_first_post_by_new_worker(self, first_mocked):
-
-        response = self.client.post(
+    def test_first_get_by_new_worker(self, first_mocked):
+        response = self.client.get(
             MTURK_REGISTER_URL,
             self.new_worker_data,
         )
@@ -81,7 +80,7 @@ class TestRegister(TestCase):
 
     @mock.patch.object(MTurkConnection, '__new__')
     def test_first_post_by_existed_worker(self, first_mocked):
-        response = self.client.post(
+        response = self.client.get(
             MTURK_REGISTER_URL,
             self.existed_worker_data,
         )
@@ -99,7 +98,7 @@ class TestRegister(TestCase):
 
     @mock.patch.object(MTurkConnection, '__new__')
     def test_first_post_by_rejected_worker(self, first_mocked):
-        response = self.client.post(
+        response = self.client.get(
             MTURK_REGISTER_URL,
             self.rejected_worker_data,
         )
@@ -114,7 +113,7 @@ class TestRegister(TestCase):
 
     @mock.patch.object(MTurkConnection, '__new__')
     def test_first_post_by_register_completed_worker(self, first_mocked):
-        response = self.client.post(
+        response = self.client.get(
             MTURK_REGISTER_URL,
             self.register_completed_worker_data,
         )

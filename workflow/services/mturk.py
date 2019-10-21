@@ -12,9 +12,11 @@ QUESTION_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
 </ExternalQuestion>
 """
 HITS_LIST = {
-    'register': 'https://labeling.umsi.io/mturk_register',
-    'demographics': 'https://two.com/',
-    'label': 'https://three.com/',
+    # TODO Change urls to prod before merge
+    'register_local': 'https://211.anvileight.com/mturk_register',
+    # 'register': 'https://labeling.umsi.io/mturk_register',
+    # 'demographics': 'https://labeling.umsi.io/mturk_demographics',
+    # 'label': 'https://labeling.umsi.io/mturk_label',
 }
 
 
