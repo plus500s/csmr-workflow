@@ -25,6 +25,8 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.items_hash
+.workflows_hash
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

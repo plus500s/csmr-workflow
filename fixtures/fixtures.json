@@ -6,7 +6,6 @@
       "api_id": 1,
       "name": "without evidence url workflow",
       "instruction": "instruction for without evidence url workflow",
-      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "",
       "type": "without evidence url workflow"
@@ -19,7 +18,6 @@
       "api_id": 2,
       "name": "evidence url input workflow",
       "instruction": "instruction for evidence url input workflow",
-      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "Were you able to find any corroborating evidence?",
       "type": "evidence url input workflow"
@@ -32,7 +30,6 @@
       "api_id": 3,
       "name": "evidence urls judgment workflow",
       "instruction": "instruction for evidence urls judgment workflow",
-      "judgment": "Is the item: (select only one radio button that applies) true or true enough that search and social media platforms should not demote it?",
       "prediction": "What percentage of the raters do you expect to label it as 'Yes', 'No' and 'Not sure'? Fill in the blank with a value between 0 to 100%",
       "corroborating_question": "Following are a list of links that are likely to contain corroborating evidence. Select the link that you found most useful to make your judgment.",
       "type": "evidence urls judgment workflow"
@@ -90,7 +87,6 @@
     "model": "workflow.item",
     "pk": 1,
     "fields": {
-      "api_id": 1,
       "url": "https://azcapitoltimes.com",
       "category": "category1"
     }
@@ -99,7 +95,6 @@
     "model": "workflow.item",
     "pk": 2,
     "fields": {
-      "api_id": 2,
       "url": "https://www.i24news.tv",
       "category": "category2"
     }
@@ -108,7 +103,6 @@
     "model": "workflow.item",
     "pk": 3,
     "fields": {
-      "api_id": 3,
       "url": "https://nypost.com",
       "category": "category3"
     }

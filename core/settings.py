@@ -83,15 +83,17 @@ DATABASES = {
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 
-if DEBUG and os.getenv('USE_EMAIL_IN_DEBUG') == 'False':
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-elif not DEBUG or os.getenv('USE_EMAIL_IN_DEBUG') == 'True':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = os.getenv('EMAIL_HOST')
-    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
-    EMAIL_PORT = os.getenv('EMAIL_PORT')
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# if DEBUG and os.getenv('USE_EMAIL_IN_DEBUG') == 'False':
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# elif not DEBUG or os.getenv('USE_EMAIL_IN_DEBUG') == 'True':
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#     EMAIL_HOST = os.getenv('EMAIL_HOST')
+#     EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+#     EMAIL_PORT = os.getenv('EMAIL_PORT')
+#     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+#     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -130,3 +132,6 @@ USE_TZ = True
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+CSRF_TRUSTED_ORIGINS = ['mturk.com', 'umsi.io']
+CSRF_COOKIE_SAMESITE = None

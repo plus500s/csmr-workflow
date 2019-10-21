@@ -1,0 +1,41 @@
+[
+  {
+    "name": "without evidence url workflow",
+    "instruction": "Open the item and take up to a minute to examine it. After that,  we'll ask you to make a judgement about whether it is false or misleading. We will also questions about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect the public from the items. Finally, we will ask you to predict what judgments others will make.",
+    "judgment_enough_information": "Do you think you have enough information about the item to make a judgment about whether it is misleading?",
+    "judgment_misleading_item": "Taking into account any evidence you found, how misleading is this item? Select from 1 to 7, where 1 = not misleading at all, 7 = extremely misleading",
+    "judgment_remove_reduce_inform_head": "In your personal opinion, which of the following actions, if any, do you think that social media platforms and search engines should take to protect the public from this item.",
+    "judgment_remove": "Remove the item. For example, Google would not present this item in search results. Facebook and Twitter would not present posts that link to this item anywhere.",
+    "judgment_reduce": "Reduce the item’s audience, if it is not removed. For example, Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.",
+    "judgment_inform": "Inform users that item may be misleading, if it is not removed. For example, there might be a “misleading” icon next to the item that users could click on to find out more information about it.",
+    "judgment_additional": "Provide additional information to explain your selection:",
+    "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" to each.",
+    "corroborating_question": null
+  },
+  {
+    "name": "evidence url input workflow",
+    "instruction": "Open the item and take up to a minute to examine it. Then, take up to five minutes to do a search to find any evidence corroborating or challenging the main points in it, and paste a link to the page with the best evidence you found. After you've examined the evidence we'll ask you to make a judgement about whether the item is false or misleading. We will also ask questions about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect the public from the items. Finally, we will ask you to predict what judgments others will make.",
+    "judgment_enough_information": "Do you think you have enough information about the item to make a judgment about whether it is misleading?",
+    "judgment_misleading_item": "Taking into account any evidence you found, how misleading is this item? Select from 1 to 7, where 1 = not misleading at all, 7 = extremely misleading",
+    "judgment_remove_reduce_inform_head": "In your personal opinion, which of the following actions, if any, do you think that social media platforms and search engines should take to protect the public from this item.",
+    "judgment_remove": "Remove the item. For example, Google would not present this item in search results. Facebook and Twitter would not present posts that link to this item anywhere.",
+    "judgment_reduce": "Reduce the item’s audience, if it is not removed. For example, Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.",
+    "judgment_inform": "Inform users that item may be misleading, if it is not removed. For example, there might be a “misleading” icon next to the item that users could click on to find out more information about it.",
+    "judgment_additional": "Provide additional information to explain your selection:",
+    "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" to each.",
+    "corroborating_question": "Were you able to find some other item with corroborating or challenging evidence that you thought was convincing? If so, paste the URL that you found most convincing."
+  },
+  {
+    "name": "evidence urls judgment workflow",
+    "instruction": "Open the item and take up to a minute to examine it. Then, look at the other URLs provided and decide whether any of them provides convincing evidence that corroborates or challenges the main points in the original item. After you've examined the evidence we'll ask you to make a judgement about whether the item is false or misleading. We will also ask questions about whether you think search engines (e.g., Google) and social media platforms (e.g., Facebook, Twitter) should take action to protect the public from the items. Finally, we will ask you to predict what judgments others will make.",
+    "judgment_enough_information": "Do you think you have enough information about the item to make a judgment about whether it is misleading?",
+    "judgment_misleading_item": "Taking into account any evidence you found, how misleading is this item? Select from 1 to 7, where 1 = not misleading at all, 7 = extremely misleading",
+    "judgment_remove_reduce_inform_head": "In your personal opinion, which of the following actions, if any, do you think that social media platforms and search engines should take to protect the public from this item.",
+    "judgment_remove": "Remove the item. For example, Google would not present this item in search results. Facebook and Twitter would not present posts that link to this item anywhere.",
+    "judgment_reduce": "Reduce the item’s audience, if it is not removed. For example, Google would present the item on the second page of search results, and Facebook and Twitter would present it where people have to scroll more before they see it. That way, fewer people would see it, but some people still would.",
+    "judgment_inform": "Inform users that item may be misleading, if it is not removed. For example, there might be a “misleading” icon next to the item that users could click on to find out more information about it.",
+    "judgment_additional": "Provide additional information to explain your selection:",
+    "prediction": "Now we'd like you to predict what judgments other people will make about this item. Imagine that we have 100 other people doing the same task that you just did. How many do you think will answer \"Yes\" to each.",
+    "corroborating_question": "Which of the following URLs provides the most convincing evidence confirming or contradicting claims in the original item?"
+  }
+]

@@ -3,23 +3,29 @@ from tests.utils import CatchInvalidSeleniumException
 from workflow.models import Item, Rater, Workflow
 from tests.selenium.base import SeleniumBaseRemoteTest
 
-LOGOUT_XPATH = '//div[@class="col-8"]/h3/a[contains(., "logout")]'
-WORKFLOW_PAGE_XPATH = '//div[@class="col-8"]/h3/a[contains(., "workflow page")]'
-SIGN_IN_XPATH = '//div[@class="col-8"]/h3/a[contains(., "sign in")]'
-SIGN_UP_XPATH = '//div[@class="col-8"]/h3/a[contains(., "sign up")]'
+LOGOUT_XPATH = '//h3/a[contains(., "logout")]'
+WORKFLOW_PAGE_XPATH = '//h3/a[contains(., "workflow page")]'
+SIGN_IN_XPATH = '//h3/a[contains(., "sign in")]'
+SIGN_UP_XPATH = '//h3/a[contains(., "sign up")]'
 
 
 class MainPageTest(SeleniumBaseRemoteTest):
 
     def test_without_login(self):
-        Item.objects.create(id=1, api_id=1, url='www.test.com', category='test_category')
-        for x in range(1, 5):
+        Item.objects.create(url='www.test.com', category='test_category', is_active=True)
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         Rater.objects.create(
             email='test_main@test.com',
             api_id='test_main',
@@ -49,14 +55,20 @@ class MainPageTest(SeleniumBaseRemoteTest):
                 selenium.find_elements_by_id(WORKFLOW_PAGE_XPATH)
 
     def test_with_login(self):
-        Item.objects.create(id=1, api_id=1, url='www.test.com', category='test_category')
-        for x in range(1, 5):
+        Item.objects.create(id=1, url='www.test.com', category='test_category', is_active=True)
+        for x in range(1, 10):
             workflow = Workflow.objects.create(
                 api_id=x,
                 name=x,
                 instruction=x,
-                judgment=x,
-                prediction=x)
+                judgment_enough_information=x,
+                judgment_misleading_item=x,
+                judgment_remove_reduce_inform_head=x,
+                judgment_remove=x,
+                judgment_reduce=x,
+                judgment_inform=x,
+                prediction=x, )
+
         rater = Rater.objects.create(
             email='test_main@test.com',
             api_id='test_main',

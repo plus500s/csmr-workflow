@@ -1,0 +1,16 @@
+{% extends 'workflow/base.html' %}
+{% block extra_loads %}
+{% load crispy_forms_tags %}
+{% endblock %}
+{% block form_name %}
+MTurk
+{% endblock %}
+{% block content %}
+<form  action="{% url 'mturk' %}" method="post" id="form">
+  {% csrf_token %}
+     <table style="width:100px">
+         {{ form|crispy }}
+     </table>
+  <input type="submit" value="Submit" id="submit" class="btn btn-success">
+</form>
+{% endblock %}

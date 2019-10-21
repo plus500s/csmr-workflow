@@ -1,0 +1,38 @@
+[
+  {
+    "name": "workflow1",
+    "instruction": "instruction1 from file",
+    "judgment_enough_information": "judgment_enough_information1 from file",
+    "judgment_misleading_item": "judgment_misleading_item1 from file",
+    "judgment_remove_reduce_inform_head": "judgment_remove_reduce_inform_head1 from file",
+    "judgment_remove": "judgment_remove1 from file",
+    "judgment_reduce": "judgment_reduce1 from file",
+    "judgment_inform": "judgment_inform1 from file",
+    "prediction": "prediction1 from file",
+    "corroborating_question": null
+  },
+  {
+    "name": "workflow2",
+    "instruction": "instruction2 from file",
+    "judgment_enough_information": "judgment_enough_information2 from file",
+    "judgment_misleading_item": "judgment_misleading_item2 from file",
+    "judgment_remove_reduce_inform_head": "judgment_remove_reduce_inform_head2 from file",
+    "judgment_remove": "judgment_remove2 from file",
+    "judgment_reduce": "judgment_reduce2 from file",
+    "judgment_inform": "judgment_inform2 from file",
+    "prediction": "prediction2 from file",
+    "corroborating_question": "corroborating2 from file"
+  },
+  {
+    "name": "workflow3",
+    "instruction": "instruction3 from file",
+    "judgment_enough_information": "judgment_enough_information3 from file",
+    "judgment_misleading_item": "judgment_misleading_item3 from file",
+    "judgment_remove_reduce_inform_head": "judgment_remove_reduce_inform_head3 from file",
+    "judgment_remove": "judgment_remove3 from file",
+    "judgment_reduce": "judgment_reduce3 from file",
+    "judgment_inform": "judgment_inform3 from file",
+    "prediction": "prediction3 from file",
+    "corroborating_question": "corroborating3 from file"
+  }
+]

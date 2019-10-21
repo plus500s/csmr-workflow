@@ -23,6 +23,15 @@ ci_tests: build_web
 add_fixtures:
 	docker-compose exec web python manage.py loaddata fixtures/fixtures.json
 
+collect_answers:
+	docker-compose exec web python manage.py collect_answers
+
+create_hits:
+	docker-compose exec web python manage.py create_hits
+
 run_selenium:
 	docker-compose up -d db
 	tests/selenium/explicit_run.sh $(args)
+
+make_migrations:
+	docker-compose exec web python manage.py makemigrations
